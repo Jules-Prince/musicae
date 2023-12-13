@@ -2,26 +2,35 @@ grammar Musicae
 
 entry Music:
     'music' name=ID '{'
-        tempo=INT
+        'tempo' tempo=INT
         tracks+=Track*
 
         '}';
 
 Track:
     'track' id=INT '{'
-        instrument=Instrument
+        'instrument' instrument=Instrument
         parts+=TrackPart*
     '}';
 
 Note:
     'note' id=INT '{'
-        duration=INT
-        value=INT
+        'duration' duration=INT
+        'pitch' pitch=Pitch
     '}';
 
+Pitch : 
+    (singleValue=STRING | values+=STRING (',' values+=STRING)*);
+
 TrackPart:
-    (time_sign=INT '/' INT)?
+    (time_sign=TimeSignature )?
     notes+=Note*;
+
+TimeSignature : 
+    'time_signature' '{'
+        'numerator' numerator=INT
+        'denominator' denominator=INT
+    '}';
 
 Instrument:
     name =( DRUM | PIANO | GUITAR | BASS ) ;
