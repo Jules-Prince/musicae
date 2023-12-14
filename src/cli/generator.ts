@@ -31,6 +31,8 @@ function compile(music: Music, fileNode: CompositeGeneratorNode): void {
         compileTrack(track, music.tempo, fileNode);
     }
 
+    generateMidiFile(music.tracks, fileNode);
+
 
 }
 
@@ -90,6 +92,19 @@ function compileNotes(note: Note, i:number, track : Track, fileNode: CompositeGe
     );
 
 }
+
+function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode) {
+    const trackParams = tracks.map((track) => `track${track.id}`).join(',');
+    
+    fileNode.append(`const writer = new MidiWriter.Writer(${trackParams});\n`);
+    fileNode.append(`\n`);
+    fileNode.append(`// Build the MIDI file\n`);
+    fileNode.append(`const builtMidi = writer.buildFile();\n`);
+    fileNode.append(`\n`);
+    fileNode.append(`// Output the MIDI file\n`);
+    fileNode.append(`console.log(builtMidi);\n`);
+}
+
 
 
 

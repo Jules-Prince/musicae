@@ -11,3 +11,10 @@ track2.setTempo(120);
 track2.setTimeSignature(4,4);
 const track2_note1 = new MidiWriter.NoteEvent({pitch: ['A2'], duration: '2'});
 track2.addEvent(track2_note1);
+const writer = new MidiWriter.Writer(track1,track2);
+
+// Build the MIDI file
+const builtMidi = writer.buildFile();
+
+// Output the MIDI file
+console.log(builtMidi);
