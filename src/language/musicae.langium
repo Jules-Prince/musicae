@@ -20,7 +20,7 @@ Note:
     '}';
 
 Pitch : 
-    (singleValue=STRING | values+=STRING (',' values+=STRING)*);
+    (values+=STRING (',' values+=STRING)*);
 
 TrackPart:
     (time_sign=TimeSignature )?

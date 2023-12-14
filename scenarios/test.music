@@ -8,11 +8,11 @@ music MyComposition {
             }
         note 1 {
             duration 4
-            pitch "C"
+            pitch 'C4'
         }
         note 2 {
             duration 2
-            pitch "E", "G"
+            pitch 'E4', 'G2'
         }
 
     }
@@ -25,7 +25,7 @@ music MyComposition {
             }
             note 1 {
                 duration 2
-                pitch "A"
+                pitch "A2"
             }
         }
 }

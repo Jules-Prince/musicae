@@ -1,4 +1,4 @@
-import type { Music,Track, TrackPart } from '../language/generated/ast.js';
+import type { Music,Note,Track, TrackPart } from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -40,9 +40,9 @@ function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorN
     );
 
     // set instrument
-    fileNode.append(
-        `track${track.id}.setInstrument(${track.instrument.name});\n`
-    );
+    //fileNode.append(
+      //  `track${track.id}.setInstrument(${track.instrument.name});\n`
+    //);
 
     // set tempo
     fileNode.append(
@@ -65,8 +65,31 @@ function compileTrackParts(part: TrackPart,  track : Track, fileNode: CompositeG
         `track${track.id}.setTimeSignature(${part.time_sign?.numerator},${part.time_sign?.denominator});\n`
     );
 
-    // 
+    for (let i = 0; i < part.notes.length; i++) {
+        compileNotes(part.notes[i], i,track, fileNode);
+    }
+
 
 }
+
+
+function compileNotes(note: Note, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
+    // create an array res to store the notes
+    let res : string[] = [];
+    for (const pitch of note.pitch.values) {
+        // add quotes to every pitch
+        res.push(`'${pitch}'`);
+    }
+    
+    fileNode.append(
+        `const `+`track${track.id}_note`+note.id+` = new MidiWriter.NoteEvent({pitch: [${res}], duration: '${note.duration}'});\n`
+    );
+
+    fileNode.append(
+        `track${track.id}.addEvent(track${track.id}_note`+note.id+`);\n`
+    );
+
+}
+
 
 
