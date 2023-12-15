@@ -24,7 +24,7 @@ Pitch :
 
 TrackPart:
     (time_sign=TimeSignature )?
-    notes+=Note*;
+    bars+=Bar*;
 
 TimeSignature : 
     'time_signature' '{'
@@ -34,6 +34,18 @@ TimeSignature :
 
 Instrument:
     name =( DRUM | PIANO | GUITAR | BASS ) ;
+
+
+
+Bar:
+    'bar' 'counter' repeat=INT '{'
+        beats+=Beat*
+    '}';
+
+Beat:
+    'beat' '{'
+        notes+=Note*
+    '}';
 
 
 terminal DRUM: 'DRUM';

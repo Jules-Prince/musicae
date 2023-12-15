@@ -1,4 +1,4 @@
-import type { Music,Note,Track, TrackPart } from '../language/generated/ast.js';
+import type { Bar, Beat, Music,Note,Track, TrackPart } from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -67,15 +67,30 @@ function compileTrackParts(part: TrackPart,  track : Track, fileNode: CompositeG
         `track${track.id}.setTimeSignature(${part.time_sign?.numerator},${part.time_sign?.denominator});\n`
     );
 
-    for (let i = 0; i < part.notes.length; i++) {
-        compileNotes(part.notes[i], i,track, fileNode);
+    for (let i = 0; i < part.bars.length; i++) {
+        for(let j = 0; j < part.bars[i].repeat; j++){
+            console.log(part.bars[i] + " " + "repeat: " + part.bars[j].repeat);
+            compileBar(part.bars[i], i,track, fileNode);
+        }
     }
-
+    
 
 }
 
+function compileBar(bar: Bar, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
+    for (let j = 0; j < bar.beats.length; j++) {
+        compileBeat(bar.beats[j], j, track, fileNode);
+    }
+}
 
-function compileNotes(note: Note, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
+function compileBeat(beat: Beat, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
+    for (let j = 0; j < beat.notes.length; j++) {
+        compileNote(beat.notes[j], j, track, fileNode);
+    }
+}
+
+
+function compileNote(note: Note, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
     // create an array res to store the notes
     let res : string[] = [];
     for (const pitch of note.pitch.values) {
@@ -83,12 +98,9 @@ function compileNotes(note: Note, i:number, track : Track, fileNode: CompositeGe
         res.push(`'${pitch}'`);
     }
     
-    fileNode.append(
-        `const `+`track${track.id}_note`+note.id+` = new MidiWriter.NoteEvent({pitch: [${res}], duration: '${note.duration}'});\n`
-    );
 
     fileNode.append(
-        `track${track.id}.addEvent(track${track.id}_note`+note.id+`);\n`
+        `track${track.id}.addEvent(new MidiWriter.NoteEvent({pitch: [${res}], duration: '${note.duration}'}));\n`
     );
 
 }
