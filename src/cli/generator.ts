@@ -1,4 +1,4 @@
-import type { Bar, Beat, Music,Note,Track, TrackPart } from '../language/generated/ast.js';
+import type { Bar, Beat, Music,Note,Track } from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -52,30 +52,21 @@ function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorN
     );
 
     // add notes
-    for (const note of track.parts) {
-        compileTrackParts(note, track, fileNode);
-    }
+    for (const bar of track.bars) {
 
-    
+        fileNode.append(
+            `track${track.id}.setTimeSignature(${bar.time_sign.numerator},${bar.time_sign.denominator});\n`
+        );
 
-}
-
-function compileTrackParts(part: TrackPart,  track : Track, fileNode: CompositeGeneratorNode): void {
-
-    // set time signature
-    fileNode.append(
-        `track${track.id}.setTimeSignature(${part.time_sign?.numerator},${part.time_sign?.denominator});\n`
-    );
-
-    for (let i = 0; i < part.bars.length; i++) {
-        for(let j = 0; j < part.bars[i].repeat; j++){
-            console.log(part.bars[i] + " " + "repeat: " + part.bars[j].repeat);
-            compileBar(part.bars[i], i,track, fileNode);
+        for (let i = 0; i < bar.repeat; i++) {
+            compileBar(bar, i, track, fileNode);
         }
     }
+
     
 
 }
+
 
 function compileBar(bar: Bar, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
     for (let j = 0; j < bar.beats.length; j++) {

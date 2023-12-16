@@ -10,7 +10,7 @@ entry Music:
 Track:
     'track' id=INT '{'
         'instrument' instrument=Instrument
-        parts+=TrackPart*
+        bars+=Bar*
     '}';
 
 Note:
@@ -22,9 +22,6 @@ Note:
 Pitch : 
     (values+=STRING (',' values+=STRING)*);
 
-TrackPart:
-    (time_sign=TimeSignature )?
-    bars+=Bar*;
 
 TimeSignature : 
     'time_signature' '{'
@@ -39,6 +36,7 @@ Instrument:
 
 Bar:
     'bar' 'counter' repeat=INT '{'
+        time_sign=TimeSignature
         beats+=Beat*
     '}';
 
