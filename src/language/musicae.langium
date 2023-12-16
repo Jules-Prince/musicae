@@ -36,7 +36,7 @@ Instrument:
 
 Bar:
     'bar' 'counter' repeat=INT '{'
-        time_sign=TimeSignature
+        (time_sign=TimeSignature)?
         beats+=Beat*
     '}';
 

@@ -41,10 +41,10 @@ function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorN
         `const track${track.id} = new MidiWriter.Track();\n`
     );
 
-    // set instrument
-    //fileNode.append(
-      //  `track${track.id}.setInstrument(${track.instrument.name});\n`
-    //);
+    const codeOfInstrument : string  = compileInstrument(track, fileNode);
+    fileNode.append(
+        `track${track.id}.addEvent(${codeOfInstrument});\n`
+    );
 
     // set tempo
     fileNode.append(
@@ -54,18 +54,37 @@ function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorN
     // add notes
     for (const bar of track.bars) {
 
-        fileNode.append(
-            `track${track.id}.setTimeSignature(${bar.time_sign.numerator},${bar.time_sign.denominator});\n`
-        );
+        if(bar.time_sign){
+            fileNode.append(
+                `track${track.id}.setTimeSignature(${bar.time_sign?.numerator},${bar.time_sign?.denominator});\n`
+            );
+        }
+
 
         for (let i = 0; i < bar.repeat; i++) {
             compileBar(bar, i, track, fileNode);
         }
     }
 
-    
-
 }
+
+
+function compileInstrument(track : Track, fileNode : CompositeGeneratorNode ) {
+    switch (track.instrument.name.toUpperCase()) {
+        case 'PIANO':
+            return "new MidiWriter.ProgramChangeEvent({ channel: 0 })";
+        
+        case 'GUITAR':
+            return "new MidiWriter.ProgramChangeEvent({ channel: 6 })"; 
+        
+        case 'DRUM':
+            return "new MidiWriter.ProgramChangeEvent({ channel: 9 })"; 
+        
+        default:
+            return ''; // Handle other instrument cases or return an empty string if none matches
+    }
+}
+
 
 
 function compileBar(bar: Bar, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
