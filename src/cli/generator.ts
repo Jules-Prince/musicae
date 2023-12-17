@@ -24,10 +24,13 @@ function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     fileNode.append(
         'import MidiWriter from \'midi-writer-js\';\n'
     );
+    fileNode.append(
+        'import { writeFileSync } from \'fs\';\n'
+    );
     for (const track of music.tracks) {
         compileTrack(track, music.tempo, fileNode);
     }
-    generateMidiFile(music.tracks, fileNode);
+    generateMidiFile(music.tracks, fileNode, music.name);
 }
 
 function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorNode): void {
@@ -102,7 +105,7 @@ function compileNote(note: Note, i:number, track : Track, fileNode: CompositeGen
 
 }
 
-function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode) {
+function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode, musicName:String) {
     const trackParams = tracks.map((track) => `track${track.id}`).join(',');
     
     fileNode.append(`const writer = new MidiWriter.Writer(${trackParams});\n`);
@@ -112,6 +115,17 @@ function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode) {
     fileNode.append(`\n`);
     fileNode.append(`// Output the MIDI file\n`);
     fileNode.append(`console.log(builtMidi);\n`);
+
+
+
+    // Spécifiez le chemin du fichier .mid que vous souhaitez créer
+    fileNode.append(`const filePath = \'output/output_${musicName}.mid\';\n`)
+    fileNode.append('const midiData = new Uint8Array(builtMidi);\n')
+    // Écrivez les données dans le fichier
+    fileNode.append('writeFileSync(filePath, Buffer.from(midiData));\n')
+    fileNode.append('console.log(`Le fichier MIDI a été généré avec succès à l\'emplacement : ${filePath}`);\n')
+    // Output the MIDI file
+    fileNode.append('console.log(builtMidi);\n')
 }
 
 

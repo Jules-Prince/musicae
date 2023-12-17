@@ -1,4 +1,5 @@
 import MidiWriter from 'midi-writer-js';
+import { writeFileSync } from 'fs';
 const track1 = new MidiWriter.Track();
 track1.addEvent(new MidiWriter.ProgramChangeEvent({ channel: 9 }));
 track1.setTempo(120);
@@ -18,4 +19,9 @@ const writer = new MidiWriter.Writer(track1,track2);
 const builtMidi = writer.buildFile();
 
 // Output the MIDI file
+console.log(builtMidi);
+const filePath = 'output/output_MySong.mid';
+const midiData = new Uint8Array(builtMidi);
+writeFileSync(filePath, Buffer.from(midiData));
+console.log(`Le fichier MIDI a été généré avec succès à l'emplacement : ${filePath}`);
 console.log(builtMidi);
