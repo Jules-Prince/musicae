@@ -24,48 +24,35 @@ function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     fileNode.append(
         'import MidiWriter from \'midi-writer-js;\'\n'
     );
-
-    
-    
     for (const track of music.tracks) {
         compileTrack(track, music.tempo, fileNode);
     }
-
     generateMidiFile(music.tracks, fileNode);
-
-
 }
 
 function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorNode): void {
     fileNode.append(
         `const track${track.id} = new MidiWriter.Track();\n`
     );
-
     const codeOfInstrument : string  = compileInstrument(track, fileNode);
     fileNode.append(
         `track${track.id}.addEvent(${codeOfInstrument});\n`
     );
-
     // set tempo
     fileNode.append(
         `track${track.id}.setTempo(${tempo});\n`
     );
 
-    // add notes
-    for (const bar of track.bars) {
-
-        if(bar.time_sign){
-            fileNode.append(
-                `track${track.id}.setTimeSignature(${bar.time_sign?.numerator},${bar.time_sign?.denominator});\n`
-            );
-        }
-
-
-        for (let i = 0; i < bar.repeat; i++) {
-            compileBar(bar, i, track, fileNode);
+    for (const trackPart of track.parts){
+        fileNode.append(
+            `track${track.id}.setTimeSignature(${trackPart.time_sign?.numerator},${trackPart.time_sign?.denominator});\n`
+        );
+        for (const bar of trackPart.bars) {
+            for (let i = 0; i < bar.repeat; i++) {
+                compileBar(bar, i, track, fileNode);
+            }
         }
     }
-
 }
 
 
