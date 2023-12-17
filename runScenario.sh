@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-inputFilePath="scenarios/"$1
+inputFilePath="scenarios/"$1".music"
 outputDir="generated"
 
 # Générer le fichier JavaScript
@@ -18,7 +18,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Exécuter le fichier JavaScript généré
-generatedFilePath="$outputDir/test3.js"
+generatedFilePath="$outputDir/$1.js"
 node "$generatedFilePath"
 
 if [ $? -ne 0 ]; then

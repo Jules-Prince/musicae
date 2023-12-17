@@ -22,7 +22,7 @@ export function generateMusicFile(music: Music,filePath: string, destination: st
 
 function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     fileNode.append(
-        'import MidiWriter from \'midi-writer-js;\'\n'
+        'import MidiWriter from \'midi-writer-js\';\n'
     );
     for (const track of music.tracks) {
         compileTrack(track, music.tempo, fileNode);

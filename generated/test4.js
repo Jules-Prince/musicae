@@ -1,4 +1,4 @@
-import MidiWriter from 'midi-writer-js;'
+import MidiWriter from 'midi-writer-js';
 const track1 = new MidiWriter.Track();
 track1.addEvent(new MidiWriter.ProgramChangeEvent({ channel: 9 }));
 track1.setTempo(120);
