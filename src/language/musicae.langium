@@ -13,6 +13,12 @@ Track:
         parts+=TrackPart*
     '}';
 
+TrackPart:
+    'trackPart' '{'
+        time_sign=TimeSignature
+        bars+=Bar*
+    '}';
+
 Note:
     'note' id=INT '{'
         'duration' duration=INT
@@ -22,9 +28,6 @@ Note:
 Pitch : 
     (values+=STRING (',' values+=STRING)*);
 
-TrackPart:
-    (time_sign=TimeSignature )?
-    bars+=Bar*;
 
 TimeSignature : 
     'time_signature' '{'
@@ -34,8 +37,6 @@ TimeSignature :
 
 Instrument:
     name =( DRUM | PIANO | GUITAR | BASS ) ;
-
-
 
 Bar:
     'bar' 'counter' repeat=INT '{'

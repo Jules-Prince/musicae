@@ -1,4 +1,4 @@
-import type { Bar, Beat, Music,Note,Track, TrackPart } from '../language/generated/ast.js';
+import type { Bar, Beat, Music,Note,Track } from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -22,60 +22,60 @@ export function generateMusicFile(music: Music,filePath: string, destination: st
 
 function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     fileNode.append(
-        'import MidiWriter from \'midi-writer-js;\'\n'
+        'import MidiWriter from \'midi-writer-js\';\n'
     );
-
-    
-    
+    fileNode.append(
+        'import { writeFileSync } from \'fs\';\n'
+    );
     for (const track of music.tracks) {
         compileTrack(track, music.tempo, fileNode);
     }
-
-    generateMidiFile(music.tracks, fileNode);
-
-
+    generateMidiFile(music.tracks, fileNode, music.name);
 }
 
 function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorNode): void {
     fileNode.append(
         `const track${track.id} = new MidiWriter.Track();\n`
     );
-
-    // set instrument
-    //fileNode.append(
-      //  `track${track.id}.setInstrument(${track.instrument.name});\n`
-    //);
-
+    const codeOfInstrument : string  = compileInstrument(track, fileNode);
+    fileNode.append(
+        `track${track.id}.addEvent(${codeOfInstrument});\n`
+    );
     // set tempo
     fileNode.append(
         `track${track.id}.setTempo(${tempo});\n`
     );
 
-    // add notes
-    for (const note of track.parts) {
-        compileTrackParts(note, track, fileNode);
-    }
-
-    
-
-}
-
-function compileTrackParts(part: TrackPart,  track : Track, fileNode: CompositeGeneratorNode): void {
-
-    // set time signature
-    fileNode.append(
-        `track${track.id}.setTimeSignature(${part.time_sign?.numerator},${part.time_sign?.denominator});\n`
-    );
-
-    for (let i = 0; i < part.bars.length; i++) {
-        for(let j = 0; j < part.bars[i].repeat; j++){
-            console.log(part.bars[i] + " " + "repeat: " + part.bars[j].repeat);
-            compileBar(part.bars[i], i,track, fileNode);
+    for (const trackPart of track.parts){
+        fileNode.append(
+            `track${track.id}.setTimeSignature(${trackPart.time_sign?.numerator},${trackPart.time_sign?.denominator});\n`
+        );
+        for (const bar of trackPart.bars) {
+            for (let i = 0; i < bar.repeat; i++) {
+                compileBar(bar, i, track, fileNode);
+            }
         }
     }
-    
-
 }
+
+
+function compileInstrument(track : Track, fileNode : CompositeGeneratorNode ) {
+    switch (track.instrument.name.toUpperCase()) {
+        case 'PIANO':
+            return "new MidiWriter.ProgramChangeEvent({ channel: 0 })";
+        
+        case 'GUITAR':
+            return "new MidiWriter.ProgramChangeEvent({ channel: 6 })"; 
+        
+        case 'DRUM':
+            return "new MidiWriter.ProgramChangeEvent({ channel: 9 })"; 
+        
+        default:
+            return ''; // Handle other instrument cases or return an empty string if none matches
+    }
+}
+
+
 
 function compileBar(bar: Bar, i:number, track : Track, fileNode: CompositeGeneratorNode): void {
     for (let j = 0; j < bar.beats.length; j++) {
@@ -105,16 +105,27 @@ function compileNote(note: Note, i:number, track : Track, fileNode: CompositeGen
 
 }
 
-function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode) {
+function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode, musicName:String) {
     const trackParams = tracks.map((track) => `track${track.id}`).join(',');
     
-    fileNode.append(`const writer = new MidiWriter.Writer(${trackParams});\n`);
+    fileNode.append(`const writer = new MidiWriter.Writer([${trackParams}]);\n`);
     fileNode.append(`\n`);
     fileNode.append(`// Build the MIDI file\n`);
     fileNode.append(`const builtMidi = writer.buildFile();\n`);
     fileNode.append(`\n`);
     fileNode.append(`// Output the MIDI file\n`);
     fileNode.append(`console.log(builtMidi);\n`);
+
+
+
+    // Spécifiez le chemin du fichier .mid que vous souhaitez créer
+    fileNode.append(`const filePath = \'output/output_${musicName}.mid\';\n`)
+    fileNode.append('const midiData = new Uint8Array(builtMidi);\n')
+    // Écrivez les données dans le fichier
+    fileNode.append('writeFileSync(filePath, Buffer.from(midiData));\n')
+    fileNode.append('console.log(`Le fichier MIDI a été généré avec succès à l\'emplacement : ${filePath}`);\n')
+    // Output the MIDI file
+    fileNode.append('console.log(builtMidi);\n')
 }
 
 
