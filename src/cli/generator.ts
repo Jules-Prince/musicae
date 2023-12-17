@@ -108,7 +108,7 @@ function compileNote(note: Note, i:number, track : Track, fileNode: CompositeGen
 function generateMidiFile(tracks:Track[], fileNode:CompositeGeneratorNode, musicName:String) {
     const trackParams = tracks.map((track) => `track${track.id}`).join(',');
     
-    fileNode.append(`const writer = new MidiWriter.Writer(${trackParams});\n`);
+    fileNode.append(`const writer = new MidiWriter.Writer([${trackParams}]);\n`);
     fileNode.append(`\n`);
     fileNode.append(`// Build the MIDI file\n`);
     fileNode.append(`const builtMidi = writer.buildFile();\n`);

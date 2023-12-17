@@ -13,7 +13,7 @@ track2.addEvent(new MidiWriter.ProgramChangeEvent({ channel: 0 }));
 track2.setTempo(120);
 track2.setTimeSignature(3,4);
 track2.addEvent(new MidiWriter.NoteEvent({pitch: ['C5, E5, G5'], duration: '1'}));
-const writer = new MidiWriter.Writer(track1,track2);
+const writer = new MidiWriter.Writer([track1,track2]);
 
 // Build the MIDI file
 const builtMidi = writer.buildFile();
