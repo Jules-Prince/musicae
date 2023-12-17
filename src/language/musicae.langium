@@ -14,7 +14,7 @@ Track:
     '}';
 
 TrackPart:
-    'track' '{'
+    'trackPart' '{'
         time_sign=TimeSignature
         bars+=Bar*
     '}';
