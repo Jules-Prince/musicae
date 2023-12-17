@@ -10,6 +10,12 @@ entry Music:
 Track:
     'track' id=INT '{'
         'instrument' instrument=Instrument
+        parts+=TrackPart*
+    '}';
+
+TrackPart:
+    'track' '{'
+        time_sign=TimeSignature
         bars+=Bar*
     '}';
 
@@ -32,11 +38,8 @@ TimeSignature :
 Instrument:
     name =( DRUM | PIANO | GUITAR | BASS ) ;
 
-
-
 Bar:
     'bar' 'counter' repeat=INT '{'
-        (time_sign=TimeSignature)?
         beats+=Beat*
     '}';
 
