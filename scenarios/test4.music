@@ -1,76 +1,24 @@
-music MySong {
+music myMusic {
     tempo 120
-
-    track 1 {
-        instrument DRUM
-        repeat 1 {
-
-                    (pitch1, 0, duration1, volume)
-                    (pitch1, 0, duration1, volume)
-                    (pitch1, 0, duration1, volume)
-                    (pitch1, 0, duration1, volume)
-                    (pitch1, 0, duration1, volume)
-                    (pitch1, 0, duration1, volume)
-
-
-                    C4, 0, 0.25, 1
-
-
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 2 , "A4, B4" }
-            }
-            bar counter 2 {
-                beat {
-                    { 1, "F4, D4, A4" }
-                }
-            }
-        }
-        trackPart {
-            ts{3,4}
-            bar counter 1 {
-                beat {
-                    { 1, "C4, E4, G4" }
-                    { 2 , "A4, B4" }
-                }
-                
-            }
-            bar counter 2 {
-                beat {
-                    { 1, "F4, D4, A4" }
-                }
-            }
-        }
+    time_signature {
+        4, 4
     }
-
-    track 2 {
+    track 1 {
         instrument PIANO
         trackPart {
-            ts{3,4}
-            bar counter 1 {
-                beat {
-                    {1, "C5, E5, G5"}
-                }
-            }
+            "C4", 1, 2, 80
+            "E4", 3, 1, 75
+            "G4", 4, 1, 70
+            "C5", 5, 4, 85
+        }
+    }
+    track 2 {
+        instrument GUITAR
+        trackPart {
+            "A2", 1, 2, 90
+            "C3", 3, 1, 85
+            "E3", 4, 1, 80
+            "A3", 5, 4, 95
         }
     }
 }
