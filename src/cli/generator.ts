@@ -79,42 +79,49 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
 
 function compileTrack(track: Track,  track_number:any, fileNode: CompositeGeneratorNode): void {
     for(const track_part of track.parts){
+        let instrument_number = compileInstrument(track.instrument.name.toUpperCase(), fileNode)
+
         // TODO : Pourquoi repeat est considere comme un String .. ?
         if( track_part.repeat == undefined){
-            //let instrument_number = compileInstrument(track_part, track.instrument.name.toUpperCase(), fileNode)
-            compileNote(track_part.notes,track_number, fileNode)
+            fileNode.append(
+                `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
+            );
+            compileNote(track_part.notes,instrument_number,track_number, fileNode)
         }
 
         for(let i = 0; i < track_part.repeat!; i++){
+            fileNode.append(
+                `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
+            );
             //let instrument_number = compileInstrument(track_part, track.instrument.name.toUpperCase(), fileNode)
-            compileNote(track_part.notes,track_number, fileNode)
+            compileNote(track_part.notes,instrument_number,track_number, fileNode)
         }
     }
 
 }
 
 
-/*function compileInstrument(track_part : TrackPart, instrument:String ,fileNode : CompositeGeneratorNode ) {
+function compileInstrument(instrument:String ,fileNode : CompositeGeneratorNode ) : number {
 
     // TODO : return number of chanel
 
     switch (instrument) {
         case 'PIANO':
-            return "";
+            return 0;
         
         case 'GUITAR':
-            return "";
+            return 25; // Acoustic Guitar (steel)
         
         case 'DRUM':
-            return "";
+            return 9;
         
         default:
-            return ''; // Handle other instrument cases or return an empty string if none matches
+            return 0; // Handle other instrument cases or return an empty string if none matches
     }
-}*/
+}
 
 
-function compileNote(notes: Note[], track_number : any, fileNode: CompositeGeneratorNode): void {
+function compileNote(notes: Note[],instrument_number:number, track_number : any, fileNode: CompositeGeneratorNode): void {
 
 
 
@@ -124,7 +131,7 @@ function compileNote(notes: Note[], track_number : any, fileNode: CompositeGener
             throw new Error(`Unknown pitch ${note.pitch}`);
         }else{
             fileNode.append(
-            `midi.addNote(${track_number}, 0, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`
+            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`
         );
         }
         

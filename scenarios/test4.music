@@ -4,7 +4,7 @@ music myMusic {
         4, 4
     }
     track 1 {
-        instrument PIANO
+        instrument DRUM
         trackPart {
             "C4", 1, 2, 80
             "E4", 3, 1, 75
@@ -13,7 +13,7 @@ music myMusic {
         }
     }
     track 2 {
-        instrument GUITAR
+        instrument DRUM
         trackPart {
             "A2", 1, 2, 90
             "C3", 3, 1, 85
