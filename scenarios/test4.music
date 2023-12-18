@@ -6,10 +6,48 @@ music MySong {
         trackPart {
             ts{4,4}
             bar counter 1 {
+ 
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+
+                    { 2 , "A4, B4" }
+                }
+                
+            }
+            bar counter 2 {
+                beat {
+                    { 1, "F4, D4, A4" }
+                }
+            }
+        }
+        trackPart {
+            ts{3,4}
+            bar counter 1 {
                 beat {
                     { 1, "C4, E4, G4" }
                     { 2 , "A4, B4" }
                 }
+                
             }
             bar counter 2 {
                 beat {
