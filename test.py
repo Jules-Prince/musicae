@@ -29,7 +29,6 @@ midi.addNote(track, channel, pitch1, 0, duration1, volume)
 # Ajoutez la deuxième note (qui commence en même temps que la première)
 midi.addNote(track, channel, pitch2, 0, duration2, volume)
 
-
 # Ajoutez la deuxième note (qui commence en même temps que la première)
 midi.addNote(track, channel, pitch2, 0.25, duration2, volume)
 

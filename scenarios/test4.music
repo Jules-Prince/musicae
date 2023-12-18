@@ -3,10 +3,23 @@ music MySong {
 
     track 1 {
         instrument DRUM
-        trackPart {
-            ts{4,4}
-            bar counter 1 {
- 
+        repeat 1 {
+
+                    (pitch1, 0, duration1, volume)
+                    (pitch1, 0, duration1, volume)
+                    (pitch1, 0, duration1, volume)
+                    (pitch1, 0, duration1, volume)
+                    (pitch1, 0, duration1, volume)
+                    (pitch1, 0, duration1, volume)
+
+
+                    C4, 0, 0.25, 1
+
+
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
+                    { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
@@ -15,7 +28,6 @@ music MySong {
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
-                    
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
@@ -25,14 +37,7 @@ music MySong {
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
                     { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-                    { 1, "C4, E4, G4" }
-
                     { 2 , "A4, B4" }
-                }
-                
             }
             bar counter 2 {
                 beat {

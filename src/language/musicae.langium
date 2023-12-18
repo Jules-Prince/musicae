@@ -3,9 +3,12 @@ grammar Musicae
 entry Music:
     'music' name=ID '{'
         'tempo' tempo=INT
-        tracks+=Track*
-
+        trackSet+=TrackSet*
         '}';
+
+TrackSet:
+    time_signature=TimeSignature
+    track+=Track*;
 
 Track:
     'track' id=INT '{'
@@ -15,36 +18,21 @@ Track:
 
 TrackPart:
     'trackPart' '{'
-        time_sign=TimeSignature
-        bars+=Bar*
+        ('repeat' repeat=INT)?
+        notes+=Note*
     '}';
 
 Note:
-    '{'
-        duration=INT ',' pitch=Pitch
-    '}';
-
-Pitch : 
-    (values+=STRING (',' values+=STRING)*);
+    pitch=STRING ',' position=INT ',' duration=INT ',' volume=INT ;
 
 
 TimeSignature : 
-    'ts' '{'
+    'time_signature' '{'
         numerator=INT "," denominator=INT
     '}';
 
 Instrument:
     name =( DRUM | PIANO | GUITAR | BASS ) ;
-
-Bar:
-    'bar' 'counter' repeat=INT '{'
-        beats+=Beat*
-    '}';
-
-Beat:
-    'beat' '{'
-        notes+=Note*
-    '}';
 
 
 terminal DRUM: 'DRUM';

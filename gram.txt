@@ -1,0 +1,13 @@
+
+
+
+
+
+music MySong {
+    tempo 120
+
+    track 1 {
+        instrument DRUM
+        trackPart {
+            time_signature{4,4}
+            bar counter 1 {

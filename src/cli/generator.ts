@@ -1,4 +1,4 @@
-import type { Bar, Beat, Music,Note,Track } from '../language/generated/ast.js';
+import type {Music,Note,Track, TrackSet, TrackPart, TimeSignature} from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -22,15 +22,35 @@ export function generateMusicFile(music: Music,filePath: string, destination: st
 
 function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     fileNode.append(
-        'import MidiWriter from \'midi-writer-js\';\n'
+        'from midiutil import MIDIFile\n'
+
     );
-    fileNode.append(
-        'import { writeFileSync } from \'fs\';\n'
-    );
-    for (const track of music.tracks) {
-        compileTrack(track, music.tempo, fileNode);
+
+
+
+    for (const track_set of music.trackSet) {
+        compileTrackSet(track_set, music.tempo, track_set.time_signature , fileNode);
     }
+
     generateMidiFile(music.tracks, fileNode, music.name);
+}
+
+function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSignature, fileNode: CompositeGeneratorNode) {
+
+    for(let i = 0; i < track_set.track.length; i++){
+        fileNode.append(
+            `midi_${i} = MIDIFile(${i})\n`
+        );
+        fileNode.append(
+            `midi_${i}.addTempo(0, 0, ${tempo})\n`
+        );
+        fileNode.append(
+            `time_signature = ( ${time_signature.numerator} ,  ${time_signature.denominator} )\n`
+        );
+        fileNode.append(
+            `midi_${i}.addTimeSignature(0, 0, *time_signature, 24)\n`
+        );
+    }
 }
 
 function compileTrack(track: Track, tempo:number,  fileNode: CompositeGeneratorNode): void {
