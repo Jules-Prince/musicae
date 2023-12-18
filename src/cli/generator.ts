@@ -17,6 +17,15 @@ const noteMap: { [key: string]: number } = {
     'C9': 120, 'C#9': 121, 'D9': 122, 'D#9': 123, 'E9': 124, 'F9': 125, 'F#9': 126, 'G9': 127
 };
 
+const drumMap: { [key: string]: number } = {
+    'bd': 36,  // Kick Drum ou Bass Drum
+    'sd': 38,  // Snare Drum
+    'ch': 42,  // Closed Hi-hat
+    'oh': 46,  // Opened Hi-hat
+    'cc': 49,  // Crash Cymbal
+    'rc': 51   // Ride Cymbal
+};
+
 
 
 export function generateMusicFile(music: Music,filePath: string, destination: string | undefined): string {
@@ -83,18 +92,32 @@ function compileTrack(track: Track,  track_number:any, fileNode: CompositeGenera
 
         // TODO : Pourquoi repeat est considere comme un String .. ?
         if( track_part.repeat == undefined){
+
+
             fileNode.append(
                 `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
             );
-            compileNote(track_part.notes,instrument_number,track_number, fileNode)
+
+            if(track.instrument.name.toUpperCase() == 'DRUM'){
+                compileDrumNote(track_part.notes,instrument_number,track_number, fileNode)  
+            }
+            else{
+                compileNote(track_part.notes,instrument_number,track_number, fileNode)
+            }
         }
 
         for(let i = 0; i < track_part.repeat!; i++){
             fileNode.append(
                 `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
             );
-            //let instrument_number = compileInstrument(track_part, track.instrument.name.toUpperCase(), fileNode)
-            compileNote(track_part.notes,instrument_number,track_number, fileNode)
+
+            if(track.instrument.name.toUpperCase() == 'DRUM'){
+                compileDrumNote(track_part.notes,instrument_number,track_number, fileNode)  
+            }
+            else{
+
+                compileNote(track_part.notes,instrument_number,track_number, fileNode)
+            }
         }
     }
 
@@ -121,25 +144,42 @@ function compileInstrument(instrument:String ,fileNode : CompositeGeneratorNode 
 }
 
 
+
 function compileNote(notes: Note[],instrument_number:number, track_number : any, fileNode: CompositeGeneratorNode): void {
-
-
-
     for(const note of notes){
         const pitchValue = noteMap[note.pitch.toUpperCase()];
         if (pitchValue === undefined) {
             throw new Error(`Unknown pitch ${note.pitch}`);
-        }else{
+        }
+
+        else{
             fileNode.append(
-            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`
-        );
+            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`);
         }
         
     }
-
-    // TODO : mettre les notes
-
 }
+
+
+
+function compileDrumNote(notes: Note[],instrument_number:number, track_number : any, fileNode: CompositeGeneratorNode): void {
+    for(const note of notes){
+        const pitchValue = drumMap[note.pitch];
+        console.log(note.pitch.toUpperCase())
+        if (pitchValue === undefined) {
+            throw new Error(`Unknown pitch ${note.pitch}`);
+        }
+
+        else{
+            fileNode.append(
+            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`);
+        }
+        
+    }
+}
+
+
+
 
 function generateMidiFile(fileNode:CompositeGeneratorNode) {
     fileNode.append(
