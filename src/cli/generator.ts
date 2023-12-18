@@ -38,10 +38,13 @@ function compile(music: Music, fileNode: CompositeGeneratorNode): void {
 
 function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSignature, fileNode: CompositeGeneratorNode) {
 
+    const number_of_tracks = track_set.track.length;
+    fileNode.append(
+        `midi = MIDIFile(${number_of_tracks})\n`
+    );
+
     for(let i = 0; i < track_set.track.length; i++){
-        fileNode.append(
-            `midi = MIDIFile(${i})\n`
-        );
+       
         fileNode.append(
             `midi.addTempo(0, 0, ${tempo})\n`
         );
@@ -113,7 +116,7 @@ function generateMidiFile(fileNode:CompositeGeneratorNode) {
         `with open("output.mid", "wb") as output_file:\n`
     );
     fileNode.append(
-        `    midi.writeMIDI(output_file)\n`
+        `    midi.writeFile(output_file)\n`
     );
 
 }
