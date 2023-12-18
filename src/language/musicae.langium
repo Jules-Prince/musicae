@@ -20,9 +20,8 @@ TrackPart:
     '}';
 
 Note:
-    'note' id=INT '{'
-        'duration' duration=INT
-        'pitch' pitch=Pitch
+    '{'
+        duration=INT ',' pitch=Pitch
     '}';
 
 Pitch : 
@@ -30,9 +29,8 @@ Pitch :
 
 
 TimeSignature : 
-    'time_signature' '{'
-        'numerator' numerator=INT
-        'denominator' denominator=INT
+    'ts' '{'
+        numerator=INT "," denominator=INT
     '}';
 
 Instrument:
