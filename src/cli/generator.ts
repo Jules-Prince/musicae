@@ -98,27 +98,34 @@ function compileTrack(track: Track,  track_number:any, fileNode: CompositeGenera
                 `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
             );
 
-            if(track.instrument.name.toUpperCase() == 'DRUM'){
-                compileDrumNote(track_part.notes,instrument_number,track_number, fileNode)  
-            }
-            else{
-                compileNote(track_part.notes,instrument_number,track_number, fileNode)
-            }
-        }
-
-        for(let i = 0; i < track_part.repeat!; i++){
-            fileNode.append(
-                `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
-            );
+            console.log(track.instrument.name.toUpperCase())
 
             if(track.instrument.name.toUpperCase() == 'DRUM'){
-                compileDrumNote(track_part.notes,instrument_number,track_number, fileNode)  
+                compileDrumNote(track_part.notes,instrument_number,track_number,0, fileNode)  
             }
             else{
-
-                compileNote(track_part.notes,instrument_number,track_number, fileNode)
+                compileNote(track_part.notes,instrument_number,track_number,0, fileNode)
             }
         }
+        else{
+
+            for(let i = 0; i < track_part.repeat!; i++){
+                fileNode.append(
+                    `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
+                );
+    
+                if(track.instrument.name.toUpperCase() == 'DRUM'){
+                    compileDrumNote(track_part.notes,instrument_number,track_number,i, fileNode)  
+                }
+                else{
+    
+                    compileNote(track_part.notes,instrument_number,track_number,i, fileNode)
+                }
+            }
+
+        }
+
+        
     }
 
 }
@@ -145,7 +152,7 @@ function compileInstrument(instrument:String ,fileNode : CompositeGeneratorNode 
 
 
 
-function compileNote(notes: Note[],instrument_number:number, track_number : any, fileNode: CompositeGeneratorNode): void {
+function compileNote(notes: Note[],instrument_number:number, track_number : any, i:number, fileNode: CompositeGeneratorNode): void {
     for(const note of notes){
         const pitchValue = noteMap[note.pitch.toUpperCase()];
         if (pitchValue === undefined) {
@@ -153,8 +160,10 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
         }
 
         else{
+            const decimal = note.position.n1+i;
             fileNode.append(
-            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`);
+
+            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
         }
         
     }
@@ -162,7 +171,7 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
 
 
-function compileDrumNote(notes: Note[],instrument_number:number, track_number : any, fileNode: CompositeGeneratorNode): void {
+function compileDrumNote(notes: Note[],instrument_number:number, track_number : any, i:number, fileNode: CompositeGeneratorNode): void {
     for(const note of notes){
         const pitchValue = drumMap[note.pitch];
         console.log(note.pitch.toUpperCase())
@@ -171,8 +180,9 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
         }
 
         else{
+            const decimal = note.position.n1+i;
             fileNode.append(
-            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${note.position} ,${note.duration}, ${note.volume})\n`);
+            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
         }
         
     }

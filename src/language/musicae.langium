@@ -23,8 +23,11 @@ TrackPart:
     '}';
 
 Note:
-    pitch=STRING ',' position=INT ',' duration=INT ',' volume=INT ;
+    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;
 
+
+Float:
+    n1=INT '.' n2=INT;
 
 TimeSignature : 
     'time_signature' '{'
@@ -42,6 +45,7 @@ terminal BASS: 'BASS';
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
+terminal FLOAT: /[0-9]+'.'+[0-9]/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 
 
