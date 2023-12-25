@@ -53,7 +53,7 @@ function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     for (const track_set of music.trackSet) {
         compileTrackSet(track_set, music.tempo, track_set.time_signature , fileNode);
     }
-    generateMidiFile(fileNode);
+    generateMidiFile(music.name, fileNode);
 
 
     // TODO : Est ce encore utile ?
@@ -86,49 +86,25 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
 
 }
 
-function compileTrack(track: Track,  track_number:any, fileNode: CompositeGeneratorNode): void {
-    for(const track_part of track.parts){
-        let instrument_number = compileInstrument(track.instrument.name.toUpperCase(), fileNode)
+function compileTrack(track: Track, trackNumber: any, fileNode: CompositeGeneratorNode): void {
+    const instrumentNumber = compileInstrument(track.instrument.name.toUpperCase(), fileNode);
 
-        // TODO : Pourquoi repeat est considere comme un String .. ?
-        if( track_part.repeat == undefined){
+    for (const trackPart of track.parts) {
+        fileNode.append(
+            `midi.addProgramChange(${trackNumber}, ${trackNumber}, 0, ${instrumentNumber})\n`
+        );
 
-
-            fileNode.append(
-                `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
-            );
-
-            console.log(track.instrument.name.toUpperCase())
-
-            if(track.instrument.name.toUpperCase() == 'DRUM'){
-                compileDrumNote(track_part.notes,instrument_number,track_number,0, fileNode)  
-            }
-            else{
-                compileNote(track_part.notes,instrument_number,track_number,0, fileNode)
+        const repeatCount = trackPart.repeat || 1;
+        for (let i = 0; i < repeatCount; i++) {
+            if (track.instrument.name.toUpperCase() === 'DRUM') {
+                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, i, fileNode);
+            } else {
+                compileNote(trackPart.notes, instrumentNumber, trackNumber, i, fileNode);
             }
         }
-        else{
-
-            for(let i = 0; i < track_part.repeat!; i++){
-                fileNode.append(
-                    `midi.addProgramChange(${track_number}, ${track_number}, 0, ${instrument_number})\n`
-                );
-    
-                if(track.instrument.name.toUpperCase() == 'DRUM'){
-                    compileDrumNote(track_part.notes,instrument_number,track_number,i, fileNode)  
-                }
-                else{
-    
-                    compileNote(track_part.notes,instrument_number,track_number,i, fileNode)
-                }
-            }
-
-        }
-
-        
     }
-
 }
+
 
 
 function compileInstrument(instrument:String ,fileNode : CompositeGeneratorNode ) : number {
@@ -191,14 +167,13 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
 
 
 
-function generateMidiFile(fileNode:CompositeGeneratorNode) {
+function generateMidiFile(name:String, fileNode:CompositeGeneratorNode) {
     fileNode.append(
-        `with open("output.mid", "wb") as output_file:\n`
+        `with open("./output/${name}.mid", "wb") as output_file:\n`
     );
     fileNode.append(
-        `    midi.writeFile(output_file)\n`
+        `   midi.writeFile(output_file)\n`
     );
-
 }
 
 

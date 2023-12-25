@@ -18,7 +18,7 @@ Track:
 
 TrackPart:
     'trackPart' '{'
-        ('repeat' repeat=INT)?
+        'repeat' repeat=INT?
         notes+=Note*
     '}';
 
