@@ -97,9 +97,9 @@ function compileTrack(track: Track, trackNumber: any, fileNode: CompositeGenerat
         const repeatCount = trackPart.repeat || 1;
         for (let i = 0; i < repeatCount; i++) {
             if (track.instrument.name.toUpperCase() === 'DRUM') {
-                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, i, fileNode);
+                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, i*2, fileNode);
             } else {
-                compileNote(trackPart.notes, instrumentNumber, trackNumber, i, fileNode);
+                compileNote(trackPart.notes, instrumentNumber, trackNumber, i*2, fileNode);
             }
         }
     }

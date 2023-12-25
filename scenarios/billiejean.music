@@ -1,5 +1,5 @@
 music billiejean {
-    tempo 116
+    tempo 118
     time_signature {
         4, 4
     }
@@ -9,10 +9,10 @@ music billiejean {
             repeat 3
             "bd", 0.0, 1, 95
             "ch", 0.0, 1, 90
-            "ch", 0.25, 1, 90
-            "sd", 0.5 , 1 , 90
-            "ch", 0.5 , 1 , 90
-            "ch", 0.75, 1, 90
+            "ch", 0.5, 1, 90
+            "sd", 1.0 , 1 , 90
+            "ch", 1.5 , 1 , 90
+            "ch", 1.5, 1, 90
         }
     }
 }
