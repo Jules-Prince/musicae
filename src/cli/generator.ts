@@ -1,4 +1,4 @@
-import type {Music,Note,Track, TrackSet, TimeSignature} from '../language/generated/ast.js';
+import {type Music,type Note,type Track, type TrackSet, type TimeSignature, isNoteWithError} from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -156,9 +156,23 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
         }
 
         else{
-            const decimal = note.position.n1+i;
-            fileNode.append(
-            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
+
+            let  decimal = note.position.n1+i;
+            if(isNoteWithError(note)){
+                // generate random number between 0 and 0.5
+                const randomNumber = Math.random() * 0.2;
+                const integerPart = Math.floor(randomNumber);
+                decimal = decimal + integerPart;
+                const decimalPart = randomNumber - integerPart;
+                fileNode.append(
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${decimal+`.`+note.position.n2+decimalPart} ,${note.duration}, ${note.volume}, True)\n`);
+            }
+            else{
+
+            
+                fileNode.append(
+                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
+            }
         }
         
     }
