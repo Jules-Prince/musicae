@@ -136,10 +136,25 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
         }
 
         else{
-            const decimal = note.position.n1+i;
-            fileNode.append(
+            let decimal = note.position.n1+i;
 
-            `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
+            if (isNoteWithError(note)) {
+                const randomNumber = Math.random() * 0.2;
+                const integerPart = Math.floor(randomNumber);
+                decimal += integerPart; // Adding the integer part to decimal
+            
+                const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
+            
+                fileNode.append(
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${note.volume}, true)\n`
+                );
+            }
+            
+            else{
+                fileNode.append(
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
+            }
+                
         }
         
     }
@@ -158,15 +173,18 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
         else{
 
             let  decimal = note.position.n1+i;
-            if(isNoteWithError(note)){
-                // generate random number between 0 and 0.5
+            if (isNoteWithError(note)) {
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
-                decimal = decimal + integerPart;
-                const decimalPart = randomNumber - integerPart;
+                decimal += integerPart; // Adding the integer part to decimal
+            
+                const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
+            
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${decimal+`.`+note.position.n2+decimalPart} ,${note.duration}, ${note.volume}, True)\n`);
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${note.volume})\n`
+                );
             }
+            
             else{
 
             
