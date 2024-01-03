@@ -201,9 +201,6 @@ function getInstrument(instrument:String ) : number {
             return 9;
         
         default:
-            try {
-                return parseInt(instrument.toString());
-            } catch (ignored) {}
             return 0; // Handle other instrument cases or return an empty string if none matches
     }
 }
