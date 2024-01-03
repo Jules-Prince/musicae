@@ -1,0 +1,22 @@
+music loveisAll {
+    tempo 110
+    time_signature {
+        4, 4
+    }
+    track 1 {
+        instrument DRUM
+        trackPart{
+            repeat 0
+            "sd", 1.5 , 1 , 90
+
+        }
+        trackPart {
+            repeat 8
+            "oh", 2.0, 1, 100
+        }
+        trackPart {
+            repeat 2
+            "sd", 10 , 1 , 90
+        }
+    }
+}
