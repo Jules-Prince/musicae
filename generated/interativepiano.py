@@ -1,26 +1,27 @@
+from midiutil import MIDIFile
 import pygame.midi
 from pynput import keyboard
 import time
 
+
+print('click esc to stop')
 # Initialize pygame.midi
 pygame.midi.init()
 midi_output = pygame.midi.Output(0)  # Open the first MIDI port
-instrument = 16
+instrument = 0
 midi_output.set_instrument(instrument)
-
-# Define a mapping from keyboard keys to MIDI notes
 key_to_note = {
-    'a': 60,  # C4
-    's': 62,  # D4
-    'd': 64,  # E4
-    # Add more mappings as needed
+    'c': 60,
+    'd': 62,
+    'e': 64,
+    'f': 65,
+    'g': 67,
+    'a': 69,
+    'b': 71,
 }
-
 # Track which keys are currently pressed and their start times
 keys_pressed = {}
 start_time = time.time()
-
-
 def on_press(key):
     try:
         if key.char in key_to_note and key.char not in keys_pressed:
@@ -44,8 +45,7 @@ def on_release(key):
         # Save the MIDI file and exit program when Esc key is pressed
         pygame.midi.quit()
         return False
-
-
+        
 # Collect keyboard events
 listener = keyboard.Listener(
     on_press=on_press,

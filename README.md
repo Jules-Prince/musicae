@@ -25,7 +25,6 @@ classDiagram
     Music "1" o-- "1" Setup
     Track o-- TrackPart
     Setup "*" o-- "1" Key
-    Key "1" --> "1" Note
     TrackPart -- TimeSignature
     TrackPart o-- Bar
     Note o-- Pitch
@@ -34,7 +33,7 @@ classDiagram
 
     class Music{
       +String id
-      +int tempo
+      +int? tempo
     }
 
     class Track{
@@ -74,5 +73,6 @@ classDiagram
 
     class Key {
         +String name
+        +String note
     }
 ```

@@ -1,0 +1,14 @@
+music interactivePianoSetup {
+    setup {
+       instrument PIANO
+       keys {
+        "C" => "C4"  // Do
+        "D" => "D4"  // Re
+        "E" => "E4"  // Mi
+        "F" => "F4"  // Fa
+        "G" => "G4"  // Sol
+        "A" => "A4"  // La
+        "B" => "B4"  // Si
+       }
+    }
+}
