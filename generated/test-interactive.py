@@ -5,6 +5,8 @@ import time
 # Initialize pygame.midi
 pygame.midi.init()
 midi_output = pygame.midi.Output(0)  # Open the first MIDI port
+instrument = 16
+midi_output.set_instrument(instrument)
 
 # MIDI file setup
 tempo = 118  # beats per minute
