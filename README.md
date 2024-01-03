@@ -22,7 +22,10 @@ https://langium.org/tutorials/generation/
 
 classDiagram
     Music o-- Track
+    Music "1" o-- "1" Setup
     Track o-- TrackPart
+    Setup "*" o-- "1" Key
+    Key "1" --> "1" Note
     TrackPart -- TimeSignature
     TrackPart o-- Bar
     Note o-- Pitch
@@ -38,7 +41,7 @@ classDiagram
       +int id
       +String instrument
     }
-    
+
     class TrackPart{
     }
     
@@ -64,4 +67,12 @@ classDiagram
         +String values
     }
 
+    class Setup {
+      +int id
+      +String instrument
+    }
+
+    class Key {
+        +String name
+    }
 ```
