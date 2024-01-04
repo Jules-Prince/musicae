@@ -142,9 +142,18 @@ function compileTrack(track: Track, trackNumber: any, fileNode: CompositeGenerat
 }
 
 function compileKeys(keys: Array<Key>, fileNode: CompositeGeneratorNode) {
+    function toUpperCaseKeys(map: { [key: string]: number }): { [key: string]: number } {
+        const upperCaseMap: { [key: string]: number } = {};
+        for (const key in map) {
+            upperCaseMap[key.toUpperCase()] = map[key];
+        }
+        return upperCaseMap;
+    }
+
     fileNode.append("key_to_note = {\n")
+    const allNotes: { [key: string]: number } = { ...toUpperCaseKeys(noteMap), ...toUpperCaseKeys(drumMap) };
     for (const key of keys) {
-        fileNode.append(`    '${key.name.toLowerCase()}': ${noteMap[key.note.toUpperCase()]},\n`)
+        fileNode.append(`    '${key.name.toLowerCase()}': ${allNotes[key.note.toUpperCase()]},\n`)
     }
     fileNode.append("}\n")
 }
