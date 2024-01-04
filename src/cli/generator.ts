@@ -165,7 +165,7 @@ function compileCommonSetupFunctions(fileNode: CompositeGeneratorNode) {
         if key.char in key_to_note and key.char not in keys_pressed:
             note = key_to_note[key.char]
             print(f"Playing note: {note}")
-            midi_output.note_on(note, 100)  # Note on with velocity 100
+            midi_output.note_on(note, 100, channel=instrument)  # Note on with velocity 100
             keys_pressed[key.char] = time.time()  # Record the start time of the note
     except AttributeError:
         pass
