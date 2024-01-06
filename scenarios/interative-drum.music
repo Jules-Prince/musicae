@@ -1,0 +1,13 @@
+music interactiveDrumSetup {
+    setup {
+       instrument DRUM
+       keys {
+        "A" => "bd"
+        "Z" => "sd"
+        "E" => "ch"
+        "R" => "oh"
+        "T" => "cc"
+        "Y" => "rc"
+       }
+    }
+}

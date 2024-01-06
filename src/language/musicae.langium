@@ -2,13 +2,22 @@ grammar Musicae
 
 entry Music:
     'music' name=ID '{'
-        'tempo' tempo=INT
+        ('tempo' tempo=INT)?
         trackSet+=TrackSet*
-        '}';
+        (setup=Setup)?
+    '}';
 
 TrackSet:
     time_signature=TimeSignature
     track+=Track*;
+
+Setup:
+    'setup' '{'
+        'instrument' instrument=Instrument
+        'keys' '{'
+            keys+=Key*
+        '}'
+    '}';
 
 Track:
     'track' id=INT '{'
@@ -21,6 +30,9 @@ TrackPart:
         'repeat' repeat=INT?
         notes+=Note*
     '}';
+
+Key:
+    name=STRING '=>' note=STRING (',')?;
 
 Note:
     pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;

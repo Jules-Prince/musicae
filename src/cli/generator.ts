@@ -1,4 +1,4 @@
-import type {Music,Note,Track, TrackSet, TimeSignature} from '../language/generated/ast.js';
+import type {Music, Note, Track, TrackSet, TimeSignature, Setup, Key} from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -47,14 +47,29 @@ export function generateMusicFile(music: Music,filePath: string, destination: st
 function compile(music: Music, fileNode: CompositeGeneratorNode): void {
     fileNode.append(
         'from midiutil import MIDIFile\n'
-
     );
+    if (music.setup !== undefined) {
+        fileNode.append(
+            'import pygame.midi\n' +
+            'from pynput import keyboard\n' +
+            'import time\n'
+        );
+    }
+
+    if (music.tempo === undefined) { // set default tempo to 120
+        music.tempo = 120;
+    }
 
     for (const track_set of music.trackSet) {
         compileTrackSet(track_set, music.tempo, track_set.time_signature , fileNode);
     }
-    generateMidiFile(music.name, fileNode);
+    if (music.trackSet.length > 0) {
+        generateMidiFile(music.name, fileNode);
+    }
 
+    if (music.setup !== undefined) {
+        compileSetup(music.setup, fileNode);
+    }
 
     // TODO : Est ce encore utile ?
     //generateMidiFile(music.tracks, fileNode, music.name);
@@ -82,12 +97,33 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
         compileTrack(track_set.track[i], i, fileNode);
 
     }
+}
 
+function compileSetup(setup: Setup, fileNode: CompositeGeneratorNode) {
+    const instrumentNumber = getInstrument(setup.instrument.name.toUpperCase());
 
+    fileNode.append(
+        "\n\nprint('click esc to stop')\n" +
+        "# Initialize pygame.midi\n" +
+        "pygame.midi.init()\n" +
+        "midi_output = pygame.midi.Output(0)  # Open the first MIDI port\n" +
+        `instrument = ${instrumentNumber}\n` +
+        "midi_output.set_instrument(instrument)\n"
+    );
+
+    compileKeys(setup.keys, fileNode);
+
+    fileNode.append(
+        "# Track which keys are currently pressed and their start times\n" +
+        "keys_pressed = {}\n" +
+        "start_time = time.time()"
+    );
+
+    compileCommonSetupFunctions(fileNode);
 }
 
 function compileTrack(track: Track, trackNumber: any, fileNode: CompositeGeneratorNode): void {
-    const instrumentNumber = compileInstrument(track.instrument.name.toUpperCase(), fileNode);
+    const instrumentNumber = getInstrument(track.instrument.name.toUpperCase());
 
     for (const trackPart of track.parts) {
         fileNode.append(
@@ -105,9 +141,62 @@ function compileTrack(track: Track, trackNumber: any, fileNode: CompositeGenerat
     }
 }
 
+function compileKeys(keys: Array<Key>, fileNode: CompositeGeneratorNode) {
+    function toUpperCaseKeys(map: { [key: string]: number }): { [key: string]: number } {
+        const upperCaseMap: { [key: string]: number } = {};
+        for (const key in map) {
+            upperCaseMap[key.toUpperCase()] = map[key];
+        }
+        return upperCaseMap;
+    }
+
+    fileNode.append("key_to_note = {\n")
+    const allNotes: { [key: string]: number } = { ...toUpperCaseKeys(noteMap), ...toUpperCaseKeys(drumMap) };
+    for (const key of keys) {
+        fileNode.append(`    '${key.name.toLowerCase()}': ${allNotes[key.note.toUpperCase()]},\n`)
+    }
+    fileNode.append("}\n")
+}
+
+function compileCommonSetupFunctions(fileNode: CompositeGeneratorNode) {
+    fileNode.append(
+`\ndef on_press(key):
+    try:
+        if key.char in key_to_note and key.char not in keys_pressed:
+            note = key_to_note[key.char]
+            print(f"Playing note: {note}")
+            channel=instrument if instrument < 16 else 0
+            midi_output.note_on(note, 100, channel=channel)  # Note on with velocity 100
+            keys_pressed[key.char] = time.time()  # Record the start time of the note
+    except AttributeError:
+        pass
 
 
-function compileInstrument(instrument:String ,fileNode : CompositeGeneratorNode ) : number {
+def on_release(key):
+    try:
+        if key.char in key_to_note and key.char in keys_pressed:
+            note = key_to_note[key.char]
+            midi_output.note_off(note, 100)  # Note off with velocity 100
+            keys_pressed.pop(key.char)
+    except AttributeError:
+        pass
+    if key == keyboard.Key.esc:
+        # Save the MIDI file and exit program when Esc key is pressed
+        pygame.midi.quit()
+        return False
+        
+# Collect keyboard events
+listener = keyboard.Listener(
+    on_press=on_press,
+    on_release=on_release
+)
+listener.start()
+listener.join()
+`
+    )
+}
+
+function getInstrument(instrument:String ) : number {
 
     // TODO : return number of chanel
 
@@ -163,9 +252,6 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
         
     }
 }
-
-
-
 
 function generateMidiFile(name:String, fileNode:CompositeGeneratorNode) {
     fileNode.append(
