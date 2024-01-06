@@ -11,13 +11,14 @@ midi_output = pygame.midi.Output(0)  # Open the first MIDI port
 instrument = 0
 midi_output.set_instrument(instrument)
 key_to_note = {
-    'c': 60,
-    'd': 62,
+    'a': 60,
+    'z': 62,
     'e': 64,
-    'f': 65,
-    'g': 67,
-    'a': 69,
-    'b': 71,
+    'r': 65,
+    't': 67,
+    'y': 69,
+    'u': 71,
+    'i': 72,
 }
 # Track which keys are currently pressed and their start times
 keys_pressed = {}
@@ -27,7 +28,8 @@ def on_press(key):
         if key.char in key_to_note and key.char not in keys_pressed:
             note = key_to_note[key.char]
             print(f"Playing note: {note}")
-            midi_output.note_on(note, 100)  # Note on with velocity 100
+            channel=instrument if instrument < 16 else 0
+            midi_output.note_on(note, 100, channel=channel)  # Note on with velocity 100
             keys_pressed[key.char] = time.time()  # Record the start time of the note
     except AttributeError:
         pass
