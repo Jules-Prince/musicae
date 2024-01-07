@@ -7,16 +7,16 @@ music loveisAll {
         instrument DRUM
         trackPart{
             repeat 0
-            "sd", 1.5 , 1 , 90
+            "sd", 3.0 , 1 , 90
 
         }
         trackPart {
-            repeat 8
-            "oh", 2.0, 1, 100
-        }
-        trackPart {
             repeat 2
-            "sd", 10 , 1 , 90
+            "oh", 4.0, 1, 100
+            "oh", 5.0, 1, 100
+            "oh", 6.0, 1, 100
+            "oh", 7.0, 1, 100
         }
+
     }
 }

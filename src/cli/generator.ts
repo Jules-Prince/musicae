@@ -94,7 +94,7 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
             `midi.addTimeSignature(0, 0, *time_signature, 24)\n`
         );
 
-        compileTrack(track_set.track[i], i, fileNode);
+        compileTrack(track_set.track[i], time_signature.numerator, i, fileNode);
 
     }
 }
@@ -122,20 +122,21 @@ function compileSetup(setup: Setup, fileNode: CompositeGeneratorNode) {
     compileCommonSetupFunctions(fileNode);
 }
 
-function compileTrack(track: Track, trackNumber: any, fileNode: CompositeGeneratorNode): void {
+function compileTrack(track: Track, time_sign : number, trackNumber: any, fileNode: CompositeGeneratorNode): void {
     const instrumentNumber = getInstrument(track.instrument.name.toUpperCase());
 
+    fileNode.append(
+        `midi.addProgramChange(${trackNumber}, ${trackNumber}, 0, ${instrumentNumber})\n`
+    );
     for (const trackPart of track.parts) {
-        fileNode.append(
-            `midi.addProgramChange(${trackNumber}, ${trackNumber}, 0, ${instrumentNumber})\n`
-        );
+        
 
         const repeatCount = trackPart.repeat || 1;
         for (let i = 0; i < repeatCount; i++) {
             if (track.instrument.name.toUpperCase() === 'DRUM') {
-                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, i*2, fileNode);
+                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, i*time_sign , fileNode);
             } else {
-                compileNote(trackPart.notes, instrumentNumber, trackNumber, i*2, fileNode);
+                compileNote(trackPart.notes, instrumentNumber, trackNumber, i*time_sign, fileNode);
             }
         }
     }

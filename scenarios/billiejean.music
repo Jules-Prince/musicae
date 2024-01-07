@@ -6,13 +6,19 @@ music billiejean {
     track 1 {
         instrument DRUM
         trackPart {
-            repeat 34
-            "bd", 0.0, 1, 95
+            repeat 34 
             "ch", 0.0, 1, 90
             "ch", 0.5, 1, 90
+            "bd", 0.0, 1, 95
             "sd", 1.0 , 1 , 90
-            "ch", 1.5 , 1 , 90
+            "ch", 1.0, 1, 90
             "ch", 1.5, 1, 90
+            "bd", 2.0, 1, 95
+            "ch", 2.0, 1, 95
+            "ch", 2.5, 1, 95
+            "sd", 3.0 , 1 , 90
+            "ch", 3.0, 1, 95
+
         }
     }
 }
