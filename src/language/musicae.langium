@@ -34,9 +34,14 @@ TrackPart:
 Key:
     name=STRING '=>' note=STRING (',')?;
 
-Note:
+
+Note : 
+    NormalNote | NoteWithError;
+NormalNote:
     pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;
 
+NoteWithError:
+    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ','  with_error=STRING;
 
 Float:
     n1=INT '.' n2=INT;

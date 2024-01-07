@@ -1,0 +1,18 @@
+music billiejean {
+    tempo 118
+    time_signature {
+        4, 4
+    }
+    track 1 {
+        instrument DRUM
+        trackPart {
+            repeat 34
+            "bd", 0.0, 1, 95 , "with_error"
+            "ch", 0.0, 1, 90
+            "ch", 0.5, 1, 90
+            "sd", 1.0 , 1 , 90
+            "ch", 1.5 , 1 , 90
+            "ch", 1.5, 1, 90
+        }
+    }
+}
