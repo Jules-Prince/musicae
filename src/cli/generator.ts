@@ -235,9 +235,10 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
                 decimal += integerPart; // Adding the integer part to decimal
             
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
-            
+                const volume = note.volume + generateRandomVelocityError();
+
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${note.volume}, true)\n`
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
                 );
             }
             
@@ -268,11 +269,11 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
                 decimal += integerPart; // Adding the integer part to decimal
-            
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
             
+                const volume = note.volume + generateRandomVelocityError();
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${note.volume})\n`
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
                 );
             }
             
@@ -285,6 +286,13 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
         }
         
     }
+}
+
+function generateRandomVelocityError() {
+
+    const volumeError = Math.floor(Math.random() * 11) - 5; // Nombres entre -5 et 5 inclus
+    return volumeError;
+
 }
 
 function generateMidiFile(name:String, fileNode:CompositeGeneratorNode) {
