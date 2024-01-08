@@ -241,8 +241,9 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
         }
 
         else{
-            let decimal = note.position.n1+i;
 
+            let  decimal = parseFloat(String(note.position.n1))+i;
+            let time = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
             if (isNoteWithError(note)) {
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
@@ -258,7 +259,7 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
             else{
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
             }
 
         }
