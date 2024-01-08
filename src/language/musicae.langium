@@ -41,16 +41,10 @@ Note :
     NormalNote | NoteWithError;
 
 NormalNote:
-    '['
-        pitchs+=STRING (',' pitchs+=STRING)*
-    ']'
-    ',' position=Float ',' duration=INT ',' volume=INT ;
+    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;
 
 NoteWithError:
-    '['
-        pitchs+=STRING (',' pitchs+=STRING)*
-    ']'
-    ',' position=Float ',' duration=INT ',' volume=INT ','  with_error=STRING;
+    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ','  with_error=STRING;
 
 Float:
     n1=INT '.' n2=INT;

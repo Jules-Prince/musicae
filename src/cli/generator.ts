@@ -149,9 +149,9 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any, fileNo
         for (let i = 0; i < repeatCount; i++) {
 
             if (track.instrument.name.toUpperCase() === 'DRUM') {
-                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, (startFloat + i) * time_sign, fileNode);
+                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign, fileNode);
             } else {
-                compileNote(trackPart.notes, instrumentNumber, trackNumber, (startFloat + i) * time_sign, fileNode);
+                compileNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign, fileNode);
             }
         }
     }
@@ -235,31 +235,32 @@ function getInstrument(instrument:String ) : number {
 
 function compileNote(notes: Note[],instrument_number:number, track_number : any, i:number, fileNode: CompositeGeneratorNode): void {
     for(const note of notes){
-        for(const pitch of note.pitchs) {
-            const pitchValue = noteMap[pitch.toUpperCase()];
-            if (pitchValue === undefined) {
-                throw new Error(`Unknown pitch ${pitch}`);
-            } else {
-                let decimal = note.position.n1 + i;
+        const pitchValue = noteMap[note.pitch.toUpperCase()];''
+        if (pitchValue === undefined) {
+            throw new Error(`Unknown pitch ${note.pitch}`);
+        }
 
-                if (isNoteWithError(note)) {
-                    const randomNumber = Math.random() * 0.2;
-                    const integerPart = Math.floor(randomNumber);
-                    decimal += integerPart; // Adding the integer part to decimal
+        else{
+            let decimal = note.position.n1+i;
 
-                    const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
-                    const volume = note.volume + generateRandomVelocityError();
+            if (isNoteWithError(note)) {
+                const randomNumber = Math.random() * 0.2;
+                const integerPart = Math.floor(randomNumber);
+                decimal += integerPart; // Adding the integer part to decimal
 
-                    fileNode.append(
-                        `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
-                    );
-                } else {
-                    fileNode.append(
-                        `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal + `.` + note.position.n2} ,${note.duration}, ${note.volume})\n`
-                    );
-                }
+                const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
+                const volume = note.volume + generateRandomVelocityError();
 
+                fileNode.append(
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
+                );
             }
+
+            else{
+                fileNode.append(
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal+`.`+note.position.n2} ,${note.duration}, ${note.volume})\n`);
+            }
+
         }
         
     }
@@ -269,32 +270,36 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
 function compileDrumNote(notes: Note[],instrument_number:number, track_number : any, i:number, fileNode: CompositeGeneratorNode): void {
     for(const note of notes){
-        for(const pitch of note.pitchs) {
-            const pitchValue = drumMap[pitch];
-            console.log(pitch.toUpperCase())
-            if (pitchValue === undefined) {
-                throw new Error(`Unknown pitch ${pitch}`);
-            } else {
+        const pitchValue = drumMap[note.pitch];
+        console.log(note.pitch.toUpperCase())
+        if (pitchValue === undefined) {
+            throw new Error(`Unknown pitch ${note.pitch}`);
+        }
 
-                let decimal = note.position.n1 + i;
-                if (isNoteWithError(note)) {
-                    const randomNumber = Math.random() * 0.2;
-                    const integerPart = Math.floor(randomNumber);
-                    decimal += integerPart; // Adding the integer part to decimal
-                    const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
+        else{
 
-                    const volume = note.volume + generateRandomVelocityError();
-                    fileNode.append(
-                        `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
-                    );
-                } else {
+            let  decimal = parseFloat(String(note.position.n1))+i;
+            let time = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
+            if (isNoteWithError(note)) {
+                const randomNumber = Math.random() * 0.2;
+                const integerPart = Math.floor(randomNumber);
+                decimal += integerPart; // Adding the integer part to decimal
+                const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
+
+                const volume = note.volume + generateRandomVelocityError();
+                fileNode.append(
+                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
+                );
+            }
+
+            else{
 
 
-                    fileNode.append(
-                        `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${decimal + `.` + note.position.n2} ,${note.duration}, ${note.volume})\n`);
-                }
+                fileNode.append(
+                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
             }
         }
+
     }
 }
 

@@ -5,14 +5,12 @@ music billiejean {
     }
     track 1 {
         instrument DRUM
-        trackPart {
-            repeat 34
+        trackPart track_1{
+            start 0.0
+            repeat 1
 
-            start
-
-            ["ch", "bd"], 0.0, 1, 90
-
-
+            "ch", 0.0, 1, 90
+            "bd", 0.0, 1, 90
             "ch", 0.5, 1, 90
             "sd", 1.0 , 1 , 90
             "ch", 1.0, 1, 90
@@ -22,6 +20,13 @@ music billiejean {
             "ch", 2.5, 1, 95
             "sd", 3.0 , 1 , 90
             "ch", 3.0, 1, 95
+            "ch", 3.5, 1, 95
+        }
+
+        trackPart id{
+            start 3.75
+            repeat 1
+            reuse "track_1"
         }
     }
 }
