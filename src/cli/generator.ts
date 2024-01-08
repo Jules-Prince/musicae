@@ -134,7 +134,7 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
             `time_signature = ( ${time_signature.numerator} ,  ${time_signature.denominator} )\n`
         );
         fileNode.append(
-            `midi.addTimeSignature(0, 0, *time_signature, 24)\n`
+            `midi.addTimeSignature(${i}, 0, *time_signature, 24)\n`
         );
 
         
