@@ -27,6 +27,47 @@ const drumMap: { [key: string]: number } = {
     'rc': 51   // Ride Cymbal
 };
 
+const instrumentsMap : { [key: string]: number } = {
+    'ACOUSTIC_GRAND_PIANO': 0,
+    'BRIGHT_ACOUSTIC_PIANO': 1,
+    'ELECTRIC_GRAND_PIANO': 2,
+    'HONKY_TONK_PIANO': 3,
+    'ELECTRIC_PIANO_1': 4,
+    'ELECTRIC_PIANO_2': 5,
+    'VIOLIN': 40,
+    'VIOLA': 41,
+    'CELLO': 42,
+    'CONTRABASS': 43,
+    'TREMOLO_STRINGS': 44,
+    'GUITAR': 25, // Acoustic Guitar (steel)
+    'ELECTRIC_GUITAR_CLEAN': 27,
+    'ELECTRIC_GUITAR_MUTED': 28,
+    'TRUMPET': 56,
+    'TROMBONE': 57,
+    'TUBA': 58,
+    'MUTED_TRUMPET': 59,
+    'SOPRANO_SAX': 64,
+    'ALTO_SAX': 65,
+    'TENOR_SAX': 66,
+    'BARITONE_SAX': 67,
+    'OBOE': 68,
+    'ENGLISH_HORN': 69,
+    'BASSOON': 70,
+    'CLARINET': 71,
+    'PICCOLO': 72,
+    'FLUTE': 73,
+    'RECORDER': 74,
+    'PAN_FLUTE': 75,
+    'BLOWN_BOTTLE': 76,
+    'SKAKUHACHI': 77,
+    'WHISTLE': 78,
+    'OCARINA': 79,
+    'SYNTH_LEAD_1_SQUARE': 80,
+    'SYNTH_LEAD_2_SAWTOOTH': 81,
+    'DRUM': 9 ,
+    'PIANO':0
+}
+
 
 
 export function generateMusicFile(music: Music,filePath: string, destination: string | undefined): string {
@@ -223,22 +264,12 @@ listener.join()
 }
 
 function getInstrument(instrument:String ) : number {
-
-    // TODO : return number of chanel
-
-    switch (instrument) {
-        case 'PIANO':
-            return 0;
-        
-        case 'GUITAR':
-            return 25; // Acoustic Guitar (steel)
-        
-        case 'DRUM':
-            return 9;
-        
-        default:
-            return 0; // Handle other instrument cases or return an empty string if none matches
+    const instrumentNumber =instrumentsMap[instrument.toUpperCase()]
+    if (instrumentNumber === undefined) {
+        throw new Error(`Unknown instrument ${instrument}`);
     }
+    return instrumentNumber
+    
 }
 
 
