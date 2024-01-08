@@ -52,6 +52,7 @@ const instrumentsMap : { [key: string]: number } = {
     'BARITONE_SAX': 67,
     'OBOE': 68,
     'ENGLISH_HORN': 69,
+    'BASS': 32,
     'BASSOON': 70,
     'CLARINET': 71,
     'PICCOLO': 72,
@@ -269,7 +270,6 @@ function getInstrument(instrument:String ) : number {
         throw new Error(`Unknown instrument ${instrument}`);
     }
     return instrumentNumber
-    
 }
 
 
