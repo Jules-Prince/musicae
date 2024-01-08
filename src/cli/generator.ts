@@ -80,6 +80,9 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
 
     const number_of_tracks = track_set.track.length;
     fileNode.append(
+        "counter = 0"
+    );
+    fileNode.append(
         `midi = MIDIFile(${number_of_tracks})\n`
     );
 
@@ -140,6 +143,7 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any, fileNo
                 compileNote(trackPart.notes, instrumentNumber, trackNumber, i*time_sign, fileNode);
             }
         }
+
     }
 }
 
@@ -221,7 +225,7 @@ function getInstrument(instrument:String ) : number {
 
 function compileNote(notes: Note[],instrument_number:number, track_number : any, i:number, fileNode: CompositeGeneratorNode): void {
     for(const note of notes){
-        const pitchValue = noteMap[note.pitch.toUpperCase()];
+        const pitchValue = noteMap[note.pitch.toUpperCase()];''
         if (pitchValue === undefined) {
             throw new Error(`Unknown pitch ${note.pitch}`);
         }

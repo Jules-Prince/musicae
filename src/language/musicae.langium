@@ -26,9 +26,10 @@ Track:
     '}';
 
 TrackPart:
-    'trackPart' '{'
+    'trackPart' id=ID '{'
         'repeat' repeat=INT?
         notes+=Note*
+        ('reuse' reuse= STRING)?
     '}';
 
 Key:
@@ -37,11 +38,18 @@ Key:
 
 Note : 
     NormalNote | NoteWithError;
+
 NormalNote:
-    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;
+    '['
+        pitchs+=STRING (',' pitchs+=STRING)*
+    ']'
+    ',' position=Float ',' duration=INT ',' volume=INT ;
 
 NoteWithError:
-    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ','  with_error=STRING;
+    '['
+        pitchs+=STRING (',' pitchs+=STRING)*
+    ']'
+    ',' position=Float ',' duration=INT ',' volume=INT ','  with_error=STRING;
 
 Float:
     n1=INT '.' n2=INT;
@@ -62,7 +70,6 @@ terminal BASS: 'BASS';
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
-terminal FLOAT: /[0-9]+'.'+[0-9]/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 
 
