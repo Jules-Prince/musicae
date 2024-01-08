@@ -95,7 +95,9 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
             `midi.addTimeSignature(0, 0, *time_signature, 24)\n`
         );
 
-        compileTrack(track_set.track[i], time_signature.numerator, i, fileNode);
+        
+        compileTrack(track_set.track[i], time_signature.numerator, i,track_set.track[i].human_error.valueOf(), fileNode);
+        
 
     }
 }
@@ -123,7 +125,7 @@ function compileSetup(setup: Setup, fileNode: CompositeGeneratorNode) {
     compileCommonSetupFunctions(fileNode);
 }
 
-function compileTrack(track: Track, time_sign : number, trackNumber: any, fileNode: CompositeGeneratorNode): void {
+function compileTrack(track: Track, time_sign : number, trackNumber: any, human_error:boolean, fileNode: CompositeGeneratorNode): void {
     const instrumentNumber = getInstrument(track.instrument.name.toUpperCase());
 
     fileNode.append(
@@ -144,13 +146,21 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any, fileNo
         const start = trackPart.start
         const startFloat = parseFloat(String(start.n1) + "." + String(start.n2))
 
+        // random error 
+        const randomError = Math.random() * 0.5;
 
 
         for (let i = 0; i < repeatCount; i++) {
 
             if (track.instrument.name.toUpperCase() === 'DRUM') {
+                if(human_error){
+                    compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign + randomError, fileNode);
+                }
                 compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign, fileNode);
             } else {
+                if(human_error){
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign + randomError, fileNode);
+                }
                 compileNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign, fileNode);
             }
         }
@@ -286,7 +296,6 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
                 const integerPart = Math.floor(randomNumber);
                 decimal += integerPart; // Adding the integer part to decimal
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
-
                 const volume = note.volume + generateRandomVelocityError();
                 fileNode.append(
                     `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`

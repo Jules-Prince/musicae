@@ -22,6 +22,7 @@ Setup:
 Track:
     'track' id=INT '{'
         'instrument' instrument=Instrument
+        ('human_error' human_error=BOOLEAN)?
         parts+=TrackPart*
     '}';
 
@@ -44,8 +45,7 @@ NormalNote:
     pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;
 
 NoteWithError:
-    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ','  with_error=STRING;
-
+    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ',' with_error=BOOLEAN ;
 Float:
     n1=INT '.' n2=INT;
 
@@ -58,6 +58,7 @@ Instrument:
     name =( DRUM | PIANO | GUITAR | BASS ) ;
 
 
+terminal BOOLEAN returns boolean: 'true' | 'false';
 terminal DRUM: 'DRUM';
 terminal PIANO: 'PIANO';
 terminal GUITAR: 'GUITAR';
