@@ -270,10 +270,10 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 function compileDrumNote(notes: Note[],instrument_number:number, track_number : any, i:number, fileNode: CompositeGeneratorNode): void {
     for(const note of notes){
         for(const pitch of note.pitchs) {
-            const pitchValue = drumMap[note.pitch];
-            console.log(note.pitch.toUpperCase())
+            const pitchValue = drumMap[pitch];
+            console.log(pitch.toUpperCase())
             if (pitchValue === undefined) {
-                throw new Error(`Unknown pitch ${note.pitch}`);
+                throw new Error(`Unknown pitch ${pitch}`);
             } else {
 
                 let decimal = note.position.n1 + i;
