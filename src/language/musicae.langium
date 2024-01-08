@@ -27,9 +27,10 @@ Track:
 
 TrackPart:
     'trackPart' id=ID '{'
+        'start' start=Float
         'repeat' repeat=INT?
         notes+=Note*
-        ('reuse' reuse= STRING)?
+        ('reuse' reuse=STRING)?
     '}';
 
 Key:

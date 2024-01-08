@@ -80,9 +80,6 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
 
     const number_of_tracks = track_set.track.length;
     fileNode.append(
-        "counter = 0"
-    );
-    fileNode.append(
         `midi = MIDIFile(${number_of_tracks})\n`
     );
 
@@ -132,18 +129,28 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any, fileNo
     fileNode.append(
         `midi.addProgramChange(${trackNumber}, ${trackNumber}, 0, ${instrumentNumber})\n`
     );
-    for (const trackPart of track.parts) {
-        
 
-        const repeatCount = trackPart.repeat || 1;
-        for (let i = 0; i < repeatCount; i++) {
-            if (track.instrument.name.toUpperCase() === 'DRUM') {
-                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, i*time_sign , fileNode);
-            } else {
-                compileNote(trackPart.notes, instrumentNumber, trackNumber, i*time_sign, fileNode);
+    for (const trackPart of track.parts) {
+
+
+        if(trackPart.reuse){
+            track.parts.find(t => t.id === trackPart.reuse)
+        }else{
+            const repeatCount = trackPart.repeat || 1;
+            const start = trackPart.start
+            const startFloat = parseFloat(String(start.n1) + "." + String(start.n2))
+
+
+
+            for (let i = 0; i < repeatCount; i++) {
+
+                if (track.instrument.name.toUpperCase() === 'DRUM') {
+                    compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, (startFloat + i) * time_sign, fileNode);
+                } else {
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, (startFloat + i) * time_sign, fileNode);
+                }
             }
         }
-
     }
 }
 
