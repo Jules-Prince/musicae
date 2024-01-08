@@ -285,6 +285,7 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
             let  decimal = parseFloat(String(note.position.n1))+i;
             let time = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
+            const channel=find_channel_from_instrument(instrument_number)
             if (isNoteWithError(note)) {
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
@@ -292,15 +293,15 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
                 const volume = note.volume + generateRandomVelocityError();
-
+                
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
+                    `midi.addNote(${track_number}, ${channel}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
                 );
             }
 
             else{
                 fileNode.append(
-                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
             }
 
         }
@@ -322,6 +323,7 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
 
             let  decimal = parseFloat(String(note.position.n1))+i;
             let time = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
+            const channel=find_channel_from_instrument(instrument_number)
             if (isNoteWithError(note)) {
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
@@ -329,7 +331,7 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
                 const volume = note.volume + generateRandomVelocityError();
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
+                    `midi.addNote(${track_number},${channel} , ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
                 );
             }
 
@@ -337,10 +339,20 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
 
 
                 fileNode.append(
-                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
             }
         }
 
+    }
+}
+
+
+function find_channel_from_instrument(instrument_number:number) : number {
+    if(instrument_number < 16){
+        return instrument_number
+    }
+    else{
+        return 0
     }
 }
 
