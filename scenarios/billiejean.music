@@ -26,7 +26,7 @@ music billiejean {
     }
 
     track 2 {
-            instrument BASS
+            instrument "BASS"
             trackPart track_1{
                 start 12.0
                 repeat 4
