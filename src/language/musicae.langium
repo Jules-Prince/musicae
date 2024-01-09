@@ -42,10 +42,10 @@ Note :
     NormalNote | NoteWithError;
 
 NormalNote:
-    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ;
+    pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT ;
 
 NoteWithError:
-    pitch=STRING ',' position=Float ',' duration=INT ',' volume=INT ',' with_error=BOOLEAN ;
+    pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT ',' with_error=BOOLEAN ;
 Float:
     n1=INT '.' n2=INT;
 
@@ -62,6 +62,8 @@ terminal BOOLEAN returns boolean: 'true' | 'false';
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
+terminal FLOAT returns number: /[0-9]+\.[0-9]+/; 
+
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 
 

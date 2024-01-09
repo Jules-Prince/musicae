@@ -295,13 +295,13 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
                 const volume = note.volume + generateRandomVelocityError();
                 
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${channel}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
+                    `midi.addNote(${track_number}, ${channel}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration.n1}.${note.duration.n2}, ${volume}, true)\n`
                 );
             }
 
             else{
                 fileNode.append(
-                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
             }
 
         }
@@ -331,7 +331,7 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
                 const volume = note.volume + generateRandomVelocityError();
                 fileNode.append(
-                    `midi.addNote(${track_number},${channel} , ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
+                    `midi.addNote(${track_number},${channel} , ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} ,${note.duration.n1}.${note.duration.n2}, ${volume})\n`
                 );
             }
 
@@ -339,7 +339,7 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
 
 
                 fileNode.append(
-                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
             }
         }
 
