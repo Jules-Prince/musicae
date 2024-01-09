@@ -8,7 +8,7 @@ music loveisAll {
         trackPart part1{
             start 0.0
             repeat 0
-            "sd", 0.0 , 1.0 , 90
+            "sd", 3.0 , 1.0 , 90
 
         }
         trackPart part2{
@@ -31,7 +31,41 @@ music loveisAll {
             "sd", 2.0 , 0.5 , 90
             "sd", 2.5 , 0.5 , 90
             "sd", 3.0 , 0.5 , 90
-            "sd", 3.5 , 0.5 , 90 
+            "sd", 3.5 , 0.5 , 90
+
+            
+        }
+
+        trackPart part3{
+            start 16.0
+            repeat 1
+
+            "sd", 1.0 , 1.0 , 90
+            "cc", 1.0 , 1.0 , 90
+
+            "sd", 3.0 , 1.0 , 90
+            "ht", 3.0 , 1.0 , 90
+        }
+
+        trackPart couplet1{
+            start 20.0
+            repeat 7
+
+            "oh", 0.0, 1.0, 100
+            "bd", 0.0, 1.0, 100
+
+            "oh", 1.0, 1.0, 100
+            "sd", 1.0, 1.0, 100
+
+            "oh", 2.0, 1.0, 100
+            "bd", 2.0, 1.0, 100
+
+            "oh", 3.0, 1.0, 100
+            "sd", 3.0, 1.0, 100
+
+
+
+
         }
 
 

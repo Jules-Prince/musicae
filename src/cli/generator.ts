@@ -24,7 +24,8 @@ const drumMap: { [key: string]: number } = {
     'ch': 42,  // Closed Hi-hat
     'oh': 46,  // Opened Hi-hat
     'cc': 49,  // Crash Cymbal
-    'rc': 51   // Ride Cymbal
+    'rc': 51,   // Ride Cymbal
+    'ht': 50   // High Tom
 };
 
 const instrumentsMap : { [key: string]: number } = {
