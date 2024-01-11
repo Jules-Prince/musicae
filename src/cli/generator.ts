@@ -234,7 +234,7 @@ listener = keyboard.Listener(
     on_release=on_release
 )
 with open("./output/interactive.music", "w") as o:
-   o.write('music interactive {\\n\\ttrack 1 {\\n\\t\\ttrackPart all {\\n\\t\\t\\tinstrument ' + instrument_name + '\\n\\t\\tstart 0.0\\n\\t\\trepeat 1\\n' )
+   o.write("music interactive {\\n\\ttrack 1 {\\n\\t\\tinstrument '" + instrument_name + "'\\n\\t\\ttrackPart all {\\n\\t\\t\\tstart 0.0\\n\\t\\t\\trepeat 1\\n" )
 
 output_file = open("./output/interactive.music", "a+")
 listener.start()
