@@ -24,8 +24,51 @@ const drumMap: { [key: string]: number } = {
     'ch': 42,  // Closed Hi-hat
     'oh': 46,  // Opened Hi-hat
     'cc': 49,  // Crash Cymbal
-    'rc': 51   // Ride Cymbal
+    'rc': 51,   // Ride Cymbal
+    'ht': 50   // High Tom
 };
+
+const instrumentsMap : { [key: string]: number } = {
+    'ACOUSTIC_GRAND_PIANO': 0,
+    'BRIGHT_ACOUSTIC_PIANO': 1,
+    'ELECTRIC_GRAND_PIANO': 2,
+    'HONKY_TONK_PIANO': 3,
+    'ELECTRIC_PIANO_1': 4,
+    'ELECTRIC_PIANO_2': 5,
+    'VIOLIN': 40,
+    'VIOLA': 41,
+    'CELLO': 42,
+    'CONTRABASS': 43,
+    'TREMOLO_STRINGS': 44,
+    'GUITAR': 25, // Acoustic Guitar (steel)
+    'ELECTRIC_GUITAR_CLEAN': 27,
+    'ELECTRIC_GUITAR_MUTED': 28,
+    'TRUMPET': 56,
+    'TROMBONE': 57,
+    'TUBA': 58,
+    'MUTED_TRUMPET': 59,
+    'SOPRANO_SAX': 64,
+    'ALTO_SAX': 65,
+    'TENOR_SAX': 66,
+    'BARITONE_SAX': 67,
+    'OBOE': 68,
+    'ENGLISH_HORN': 69,
+    'BASS': 32,
+    'BASSOON': 70,
+    'CLARINET': 71,
+    'PICCOLO': 72,
+    'FLUTE': 73,
+    'RECORDER': 74,
+    'PAN_FLUTE': 75,
+    'BLOWN_BOTTLE': 76,
+    'SKAKUHACHI': 77,
+    'WHISTLE': 78,
+    'OCARINA': 79,
+    'SYNTH_LEAD_1_SQUARE': 80,
+    'SYNTH_LEAD_2_SAWTOOTH': 81,
+    'DRUM': 9 ,
+    'PIANO':0
+}
 
 
 
@@ -92,7 +135,7 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
             `time_signature = ( ${time_signature.numerator} ,  ${time_signature.denominator} )\n`
         );
         fileNode.append(
-            `midi.addTimeSignature(0, 0, *time_signature, 24)\n`
+            `midi.addTimeSignature(${i}, 0, *time_signature, 24)\n`
         );
 
         
@@ -246,22 +289,11 @@ print("write the scenario in output/interactive.music")
 }
 
 function getInstrument(instrument:String ) : number {
-
-    // TODO : return number of chanel
-
-    switch (instrument) {
-        case 'PIANO':
-            return 0;
-        
-        case 'GUITAR':
-            return 25; // Acoustic Guitar (steel)
-        
-        case 'DRUM':
-            return 9;
-        
-        default:
-            return 0; // Handle other instrument cases or return an empty string if none matches
+    const instrumentNumber =instrumentsMap[instrument.toUpperCase()]
+    if (instrumentNumber === undefined) {
+        throw new Error(`Unknown instrument ${instrument}`);
     }
+    return instrumentNumber
 }
 
 
@@ -277,6 +309,7 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
             let  decimal = parseFloat(String(note.position.n1))+i;
             let time = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
+            const channel=find_channel_from_instrument(instrument_number)
             if (isNoteWithError(note)) {
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
@@ -284,15 +317,15 @@ function compileNote(notes: Note[],instrument_number:number, track_number : any,
 
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
                 const volume = note.volume + generateRandomVelocityError();
-
+                
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume}, true)\n`
+                    `midi.addNote(${track_number}, ${channel}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration.n1}.${note.duration.n2}, ${volume}, true)\n`
                 );
             }
 
             else{
                 fileNode.append(
-                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
             }
 
         }
@@ -314,6 +347,7 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
 
             let  decimal = parseFloat(String(note.position.n1))+i;
             let time = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
+            const channel=find_channel_from_instrument(instrument_number)
             if (isNoteWithError(note)) {
                 const randomNumber = Math.random() * 0.2;
                 const integerPart = Math.floor(randomNumber);
@@ -321,7 +355,7 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
                 const decimalPart = (randomNumber - integerPart).toFixed(15); // Get decimal part
                 const volume = note.volume + generateRandomVelocityError();
                 fileNode.append(
-                    `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} , ${note.duration}, ${volume})\n`
+                    `midi.addNote(${track_number},${channel} , ${pitchValue}, ${decimal}.${note.position.n2}${decimalPart.slice(2)} ,${note.duration.n1}.${note.duration.n2}, ${volume})\n`
                 );
             }
 
@@ -329,10 +363,20 @@ function compileDrumNote(notes: Note[],instrument_number:number, track_number : 
 
 
                 fileNode.append(
-                `midi.addNote(${track_number}, ${instrument_number}, ${pitchValue},${time} ,${note.duration}, ${note.volume})\n`);
+                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
             }
         }
 
+    }
+}
+
+
+function find_channel_from_instrument(instrument_number:number) : number {
+    if(instrument_number < 16){
+        return instrument_number
+    }
+    else{
+        return 0
     }
 }
 
