@@ -45,7 +45,7 @@ NormalNote:
     pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT ;
 
 NoteWithError:
-    pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT ',' with_error=BOOLEAN ;
+    pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT  'human_error' with_error=BOOLEAN ;
 
 Float:
     n1=INT '.' n2=INT;
