@@ -25,7 +25,8 @@ const drumMap: { [key: string]: number } = {
     'oh': 46,  // Opened Hi-hat
     'cc': 49,  // Crash Cymbal
     'rc': 51,   // Ride Cymbal
-    'ht': 50   // High Tom
+    'ht': 50 ,  // High Tom
+    'chc': 55   // Choked Crash
 };
 
 const instrumentsMap : { [key: string]: number } = {
@@ -186,8 +187,8 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any, human_
 
 
         const repeatCount = trackPart.repeat || 1;
-        const start = trackPart.start
-        const startFloat = parseFloat(String(start.n1) + "." + String(start.n2))
+        const start = trackPart.start*4
+        //const startFloat = parseFloat(String(start.n1) + "." + String(start.n2))
 
         // random error 
         const randomError = Math.random() * 0.5;
@@ -197,14 +198,14 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any, human_
 
             if (track.instrument.name.toUpperCase() === 'DRUM') {
                 if(human_error){
-                    compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign + randomError, fileNode);
+                    compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, fileNode);
                 }
-                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign, fileNode);
+                compileDrumNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, fileNode);
             } else {
                 if(human_error){
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign + randomError, fileNode);
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, fileNode);
                 }
-                compileNote(trackPart.notes, instrumentNumber, trackNumber, startFloat + i * time_sign, fileNode);
+                compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, fileNode);
             }
         }
     }

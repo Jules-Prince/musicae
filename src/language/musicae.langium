@@ -28,8 +28,8 @@ Track:
 
 TrackPart:
     'trackPart' id=ID '{'
-        'start' start=Float
-        'repeat' repeat=INT?
+        'start' start=INT
+        ('repeat' repeat=INT)?
         notes+=Note*
         ('reuse' reuse=STRING)?
     '}';
@@ -46,6 +46,7 @@ NormalNote:
 
 NoteWithError:
     pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT ',' with_error=BOOLEAN ;
+
 Float:
     n1=INT '.' n2=INT;
 

@@ -1,0 +1,11 @@
+music interactive {
+	track 1 {
+		instrument 'DRUM'
+		trackPart all {
+			start 0.0
+			repeat 1
+			'ch', 0.78, 0.09, 100
+
+		}
+	} 
+}
