@@ -1,6 +1,6 @@
 music interactiveDrumSetup {
     setup {
-       instrument DRUM
+       instrument 'DRUM'
        keys {
         "A" => "bd"
         "Z" => "sd"

@@ -155,6 +155,7 @@ function compileSetup(setup: Setup, fileNode: CompositeGeneratorNode) {
         "pygame.midi.init()\n" +
         "midi_output = pygame.midi.Output(0)  # Open the first MIDI port\n" +
         `instrument = ${instrumentNumber}\n` +
+        `instrument_name = '${setup.instrument.name.toUpperCase()}'\n` +
         "midi_output.set_instrument(instrument)\n"
     );
 
@@ -226,18 +227,26 @@ function compileKeys(keys: Array<Key>, fileNode: CompositeGeneratorNode) {
         fileNode.append(`    '${key.name.toLowerCase()}': ${allNotes[key.note.toUpperCase()]},\n`)
     }
     fileNode.append("}\n")
+
+    fileNode.append("key_to_note_name = {\n")
+    for (const key of keys) {
+        fileNode.append(`    '${key.name.toLowerCase()}': '${key.note}',\n`)
+    }
+    fileNode.append("}\n")
 }
 
 function compileCommonSetupFunctions(fileNode: CompositeGeneratorNode) {
     fileNode.append(
-`\ndef on_press(key):
+`\nstart_time=time.time()
+output_file = ''
+def on_press(key):
     try:
         if key.char in key_to_note and key.char not in keys_pressed:
             note = key_to_note[key.char]
-            print(f"Playing note: {note}")
-            channel=instrument if instrument < 16 else 0
+            start_time = time.time()  # Record the start time of the note
+            channel = instrument if instrument < 16 else 0
             midi_output.note_on(note, 100, channel=channel)  # Note on with velocity 100
-            keys_pressed[key.char] = time.time()  # Record the start time of the note
+            keys_pressed[key.char] = start_time  # Record the start time of the note
     except AttributeError:
         pass
 
@@ -246,12 +255,20 @@ def on_release(key):
     try:
         if key.char in key_to_note and key.char in keys_pressed:
             note = key_to_note[key.char]
+            note_name = key_to_note_name[key.char]
+            end_time = time.time()
+            duration = end_time - keys_pressed[key.char]
+            print(f"Releasing note: {note}, Duration: {duration:.2f} seconds")
+            
+            output_file.write(f"\\t\\t\\t'{note_name}', {keys_pressed[key.char] - start_time:.2f}, {duration:.2f}, 100\\n")
+            
             midi_output.note_off(note, 100)  # Note off with velocity 100
-            keys_pressed.pop(key.char)
+            del keys_pressed[key.char]
     except AttributeError:
         pass
     if key == keyboard.Key.esc:
         # Save the MIDI file and exit program when Esc key is pressed
+        print("Exiting...")
         pygame.midi.quit()
         return False
         
@@ -260,8 +277,14 @@ listener = keyboard.Listener(
     on_press=on_press,
     on_release=on_release
 )
+with open("./output/interactive.music", "w") as o:
+   o.write("music interactive {\\n\\ttempo 120\\n\\ttime_signature{4,4}\\n\\ttrack 1 {\\n\\t\\tinstrument '" + instrument_name + "'\\n\\t\\ttrackPart all {\\n\\t\\t\\tstart 0.0\\n\\t\\t\\trepeat 1\\n" )
+
+output_file = open("./output/interactive.music", "a+")
 listener.start()
 listener.join()
+output_file.write('\\n\\t\\t}\\n\\t} \\n}')
+print("write the scenario in output/interactive.music")
 `
     )
 }

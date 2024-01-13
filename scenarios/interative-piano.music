@@ -1,6 +1,6 @@
 music interactivePianoSetup {
     setup {
-       instrument PIANO
+       instrument 'PIANO'
        keys {
         "A" => "C4"  // Do
         "Z" => "D4"  // Re
