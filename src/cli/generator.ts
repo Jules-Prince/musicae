@@ -27,7 +27,8 @@ const drumMap: { [key: string]: number } = {
     'cc': 49,  // Crash Cymbal
     'rc': 51,   // Ride Cymbal
     'ht': 50 ,  // High Tom
-    'chc': 55   // Choked Crash
+    'chc': 55 ,
+    'lmt': 47   // Choked Crash
 };
 
 const instrumentsMap : { [key: string]: number } = {
