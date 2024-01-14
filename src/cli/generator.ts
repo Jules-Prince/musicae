@@ -161,7 +161,7 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
     const instrumentNumber = getInstrument(track.instrument.name.toUpperCase());
 
     fileNode.append(
-        `midi.addProgramChange(${trackNumber}, ${trackNumber}, 0, ${instrumentNumber})\n`
+        `midi.addProgramChange(${trackNumber}, 0, 0, ${instrumentNumber})\n`
     );
 
     for (let trackPart of track.parts) {
