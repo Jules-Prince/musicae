@@ -1,0 +1,23 @@
+music barModif {
+    tempo 110
+    time_signature {
+        4, 4
+    }
+    track 1 {
+        instrument "DRUM"
+        trackPart part1{
+            start 0
+            "sd", 1.0 , 1.0 , 90
+        }
+
+        trackPart part2{
+            start 1
+            previous {
+                replace {
+                    note 0 => "bd"
+                }
+            }
+
+        }
+    }
+}

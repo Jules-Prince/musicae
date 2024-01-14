@@ -32,7 +32,19 @@ TrackPart:
         ('repeat' repeat=INT)?
         notes+=Note*
         ('reuse' reuse=STRING)?
+        (previous=PreviousTrackPart)?
     '}';
+
+PreviousTrackPart:
+    'previous' '{'
+        'replace' '{'
+            notesreplacement+=NoteReplacement*
+        '}'
+    '}';
+
+NoteReplacement:
+     'note' id=INT '=>' note=STRING;
+
 
 Key:
     name=STRING '=>' note=STRING (',')?;
