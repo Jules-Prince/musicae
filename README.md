@@ -21,19 +21,25 @@ https://langium.org/tutorials/generation/
 ```mermaid
 
 classDiagram
-    Music o-- Track
-    Music "1" o-- "1" Setup
+    Music o-- TrackSet
     Track o-- TrackPart
+    TrackSet o-- TimeSignature
+    TrackSet o-- Track
+    TrackPart o-- Note
+    Note <|-- NormalNote
+    Note <|-- NoteWithError
+
+    Music "1" o-- "1" Setup
     Setup "*" o-- "1" Key
-    TrackPart -- TimeSignature
-    TrackPart o-- Bar
-    Note o-- Pitch
-    Bar o-- Beat
-    Beat o-- Note
+
 
     class Music{
       +String id
       +int? tempo
+    }
+
+    class TrackSet{
+
     }
 
     class Track{
@@ -42,28 +48,14 @@ classDiagram
     }
 
     class TrackPart{
-    }
-    
-    class Bar{
-        +int counter
-
+        +int start
+        +int? repeat
+        +String? reuse
     }
     
     class TimeSignature{
         +int numerateur
         +int denominateur
-    }
-
-    class Beat{
-
-    }
-
-    class Note{
-        +int duration
-    }
-
-    class Pitch{
-        +String values
     }
 
     class Setup {
@@ -74,5 +66,24 @@ classDiagram
     class Key {
         +String name
         +String note
+    }
+
+    class Note {
+
+    }
+
+    class NormalNote {
+        +String pitch
+        +Float position
+        +Float duration
+        +int volume
+    }
+
+    class NoteWithError {
+        +String pitch
+        +Float position
+        +Float duration
+        +int volume
+        +boolean with_error
     }
 ```
