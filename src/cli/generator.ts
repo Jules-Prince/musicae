@@ -197,11 +197,11 @@ function compileTrack(track: Track, time_sign: number, trackNumber: any, fileNod
 
         const trackPartOld = trackPart
 
-        if (trackPart.reuse) {
-            trackPart = track.parts.find(t => t.id === trackPart.reuse)!
+        if (trackPart.reuseTrackPart?.reuse) {
+            trackPart = track.parts.find(t => t.id === trackPart.reuseTrackPart?.reuse)!
             trackPart.start = trackPartOld.start
-            if(trackPartOld.reuseWithReplacement){
-                compilePreviousRemplacement(trackPart, trackPartOld?.reuseWithReplacement.notesreplacement ,  fileNode)
+            if(trackPartOld.reuseTrackPart?.reuseWithReplacement){
+                compilePreviousRemplacement(trackPart, trackPartOld?.reuseTrackPart.reuseWithReplacement.notesreplacement ,  fileNode)
 
 
             }

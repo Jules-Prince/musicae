@@ -31,8 +31,11 @@ TrackPart:
         'start' start=INT
         ('repeat' repeat=INT)?
         notes+=Note*
-        ('reuse' reuse=STRING  (reuseWithReplacement=ReuseWithReplacement)? )?
+        (reuseTrackPart=ReuseTrackPart)?
     '}';
+
+ReuseTrackPart:
+    'reuse' reuse=STRING  (reuseWithReplacement=ReuseWithReplacement)?;
 
 ReuseWithReplacement:
         'replace' '{'
