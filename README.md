@@ -76,3 +76,10 @@ classDiagram
         +String note
     }
 ```
+
+# How to use the extension
+
+- `npm i --save-dev esbuild`
+- `npm install -g @vscode/vsce`
+- Run `vsce package` to package the extension.
+Then, a file name musicae-0.0.1.vsix will be create in the root directory. Right click on then and select "Install Extension VSIX"
