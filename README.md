@@ -21,17 +21,15 @@ https://langium.org/tutorials/generation/
 ```mermaid
 
 classDiagram
-    Music o-- TrackSet
-    Track o-- TrackPart
-    TrackSet o-- TimeSignature
-    TrackSet o-- Track
-    TrackPart o-- Note
+    Music "1" o-- "*" TrackSet
+    Track "1" o-- "*" TrackPart
+    TrackSet "1" o-- "0 . 1" TimeSignature
+    TrackSet "1" o-- "*" Track
+    TrackPart "1" o-- "*" Note
     Note <|-- NormalNote
     Note <|-- NoteWithError
-
     Music "1" o-- "1" Setup
     Setup "*" o-- "1" Key
-
 
     class Music{
       +String id
