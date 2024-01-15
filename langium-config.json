@@ -1,0 +1,12 @@
+{
+    "projectName": "Musicae",
+    "languages": [{
+        "id": "musicae",
+        "grammar": "src/language/musicae.langium",
+        "fileExtensions": [".music"],
+        "textMate": {
+            "out": "syntaxes/musicae.tmLanguage.json"
+        }
+    }],
+    "out": "src/language/generated"
+}
