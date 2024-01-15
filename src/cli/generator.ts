@@ -165,7 +165,7 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
         `midi.addProgramChange(${trackNumber}, 0, 0, ${instrumentNumber})\n`
     );
 
-    let previous : TrackPart = track.parts[0]
+    //let previous : TrackPart = track.parts[0]
 
     for (let trackPart of track.parts) {
         
@@ -175,19 +175,13 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
         if(trackPart.reuse){
             trackPart = track.parts.find(t => t.id === trackPart.reuse)!
             trackPart.start = trackPartOld.start
+            if(trackPartOld.reuseWithReplacement){
+                compilePreviousRemplacement(trackPart, trackPartOld?.reuseWithReplacement.notesreplacement ,  fileNode)
+
+
+            }
+
         }
-
-        if(trackPart.previous){
-
-            trackPart = previous
-            trackPart.start = trackPartOld.start
-            compilePreviousRemplacement(trackPart, trackPartOld.previous?.notesreplacement! ,  fileNode)
-
-
-
-            
-        }
-
 
 
         const repeatCount = trackPart.repeat || 1;
@@ -224,7 +218,7 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
 
         }
 
-        previous = trackPartOld
+        //previous = trackPartOld
 
 
 
@@ -236,20 +230,17 @@ function compilePreviousRemplacement(trackPart: TrackPart,  notesremplacements :
     let newNotesMap : { [key: number]: string }= {}
     let oldnotesMap : { [key: number]: string }= {}
 
-    console.log(notesremplacements)
 
     if(notesremplacements.length > 0){
         for (let i=0; i < notesremplacements.length; i++){
             newNotesMap[notesremplacements[i].id] = notesremplacements[i].note
         }
     
-        console.log(newNotesMap)
     
         for (let i=0; i < trackPart.notes.length; i++){
             oldnotesMap[i] =trackPart.notes[i].pitch
         }
     
-        console.log(oldnotesMap)
 
         // replace notes
         for (let i=0; i < trackPart.notes.length; i++){
