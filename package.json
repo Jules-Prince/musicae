@@ -2,6 +2,7 @@
     "name": "musicae",
     "description": "Please enter a brief description here",
     "version": "0.0.1",
+    "publisher": "damedomey",
     "files": [
         "bin"
     ],
@@ -34,7 +35,7 @@
         "langium-cli": "~2.1.0",
         "typescript": "~5.1.6"
     },
-    "displayName": ".",
+    "displayName": "Musicae",
     "engines": {
         "vscode": "^1.67.0",
         "node": ">=16.0.0"
@@ -62,15 +63,35 @@
                 "scopeName": "source.musicae",
                 "path": "syntaxes/musicae.tmLanguage.json"
             }
-        ]
+        ],
+        "commands": [
+            {
+                "command": "musicae.runScenario",
+                "title": "Run Scenario"
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "resourceLangId == musicae",
+                    "command": "musicae.runScenario",
+                    "group": "navigation"
+                }
+            ]
+        }
     },
     "activationEvents": [
-        "onLanguage:musicae"
+        "onCommand:musicae.runScenario"
     ],
     "main": "./out/extension/main.cjs",
     "bin": {
         "musicae-cli": "./bin/cli.js"
     },
     "vscode:prepublish": "npm run esbuild-base -- --minify && npm run lint",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node"
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Jules-Prince/musicae.git"
+    },
+    "license": "SEE LICENSE IN LICENSE.txt"
 }
