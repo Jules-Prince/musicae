@@ -53,11 +53,13 @@ Note :
     NormalNote | NoteWithError;
 
 NormalNote:
-    pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT ;
+    pitch=STRING ',' position=Float ',' duration=(Float|NoteDuration) ',' volume=INT ;
 
 NoteWithError:
-    pitch=STRING ',' position=Float ',' duration=Float ',' volume=INT  'human_error' with_error=BOOLEAN ;
+    pitch=STRING ',' position=Float ',' duration=(Float|NoteDuration) ',' volume=INT  'human_error' with_error=BOOLEAN ;
 
+NoteDuration:
+    duration= WHOLE | duration= HALF | duration=QUARTER |duration= EIGHTH | duration=SIXTEENTH | duration=THIRTYSECOND;
 Float:
     n1=INT '.' n2=INT;
 
@@ -70,14 +72,23 @@ Instrument:
     name =STRING;
 
 
+terminal WHOLE returns string: 'whole';
+terminal HALF returns string: 'half';
+terminal QUARTER returns string: 'quarter';
+terminal EIGHTH returns string: 'eighth';
+terminal SIXTEENTH returns string: 'sixteenth';
+terminal THIRTYSECOND returns string: 'thirtysecond';
+
 terminal BOOLEAN returns boolean: 'true' | 'false';
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
-terminal FLOAT returns number: /[0-9]+\.[0-9]+/; 
+
+
 
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
+

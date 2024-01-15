@@ -1,5 +1,5 @@
 
-import {type Music,type Note,type Track, type TrackSet, type TimeSignature, isNoteWithError,Setup, Key, TrackPart, NoteReplacement} from '../language/generated/ast.js';
+import {type Music,type Note,type Track, type TrackSet, type TimeSignature, isNoteWithError,Setup, Key, TrackPart, NoteReplacement, isNoteDuration, Float, NoteDuration} from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -73,6 +73,17 @@ const instrumentsMap: { [key: string]: number } = {
     'PIANO': 0
 }
 
+const classicDurations :{ [key: string]: number } = {
+    "whole": 4.0,          // Note blanche (semibreve)
+    "half": 2.0,           // Note noire (minim)
+    "quarter": 1.0,        // Croche
+    "eighth": 0.5,       // Double croche
+    "sixteenth": 0.25,   // Triple croche
+    "thirtysecond": 0.125        // Quadruple croche
+  };
+
+
+
 
 
 export function generateMusicFile(music: Music, filePath: string, destination: string | undefined, isPlayable: boolean | undefined): string {
@@ -105,7 +116,6 @@ function compile(music: Music, fileNode: CompositeGeneratorNode, isPlayable: boo
     }
 
     if (isPlayable) {
-        console.log("AAAAAAA")
         fileNode.append(
             'import pygame\n' +
             'import time\n\n'
@@ -296,13 +306,15 @@ function compileNote(notes: Note[], instrument_number: number, track_number: any
             const channel = find_channel_from_instrument(instrument_number)
 
             if (isNoteWithError(note)) {
-
-                compileNoteWithError(track_number, channel, pitchValue, time_start, note, fileNode);
+                compileNoteWithError(track_number, channel, pitchValue, time_start, note.duration,note.volume, fileNode);
             }
 
             else {
-                fileNode.append(
-                    `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time_start} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
+
+
+
+                compileNormalNote(track_number, channel, pitchValue, time_start, note.duration,note.volume, fileNode);
+
             }
 
         }
@@ -310,16 +322,51 @@ function compileNote(notes: Note[], instrument_number: number, track_number: any
     }
 }
 
-function compileNoteWithError(track_number: number, channel: number, pitch: any, start_time: number, note: Note, fileNode: CompositeGeneratorNode): void {
 
+
+function compileStringNoteDuration(duration: string): number {
+    return classicDurations[duration]
+
+}
+
+function compileNoteWithError(track_number: number, channel: number, pitch: any, start_time: number, duration: any, volume:number, fileNode: CompositeGeneratorNode): void {
     const randomNumber = Math.random() * 0.2;
     start_time += randomNumber;
-    const volume_with_error = note.volume + generateRandomVelocityError();
+    const volume_with_error = volume + generateRandomVelocityError();
 
-    fileNode.append(
-        `midi.addNote(${track_number}, ${channel}, ${pitch},${start_time} , ${note.duration.n1}.${note.duration.n2}, ${volume_with_error})\n`
-    );
+    if(isNoteDuration(duration)){
+        const duration_number: number = compileStringNoteDuration(duration.duration!)
 
+        fileNode.append(
+            `midi.addNote(${track_number}, ${channel}, ${pitch},${start_time} ,${duration_number}, ${volume_with_error})\n`
+        );
+    }
+
+    else{
+        fileNode.append(
+            `midi.addNote(${track_number}, ${channel}, ${pitch},${start_time} , ${duration.n1}.${duration.n2}, ${volume_with_error})\n`
+        );
+
+    }
+}
+
+function compileNormalNote(track_number: number, channel: number, pitch: any, start_time: number, duration:Float|NoteDuration,  volume:number, fileNode: CompositeGeneratorNode){
+
+    if((isNoteDuration(duration))){
+
+        const duration_number: number = compileStringNoteDuration(duration.duration!)
+
+        fileNode.append(
+            `midi.addNote(${track_number}, ${channel}, ${pitch},${start_time} ,${duration_number}, ${volume})\n`
+        );
+    }
+
+    else{
+        fileNode.append(
+            `midi.addNote(${track_number}, ${channel}, ${pitch},${start_time} , ${duration.n1}.${duration.n2}, ${volume})\n`
+        );
+
+    }
 
 }
 
