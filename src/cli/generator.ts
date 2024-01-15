@@ -1,5 +1,5 @@
 
-import {type Music,type Note,type Track, type TrackSet, type TimeSignature, isNoteWithError,Setup, Key} from '../language/generated/ast.js';
+import { type Music, type Note, type Track, type TrackSet, type TimeSignature, isNoteWithError, Setup, Key } from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -26,12 +26,12 @@ const drumMap: { [key: string]: number } = {
     'oh': 46,  // Opened Hi-hat
     'cc': 49,  // Crash Cymbal
     'rc': 51,   // Ride Cymbal
-    'ht': 50 ,  // High Tom
-    'chc': 55 ,
+    'ht': 50,  // High Tom
+    'chc': 55,
     'lmt': 47   // Choked Crash
 };
 
-const instrumentsMap : { [key: string]: number } = {
+const instrumentsMap: { [key: string]: number } = {
     'ACOUSTIC_GRAND_PIANO': 0,
     'BRIGHT_ACOUSTIC_PIANO': 1,
     'ELECTRIC_GRAND_PIANO': 2,
@@ -69,49 +69,64 @@ const instrumentsMap : { [key: string]: number } = {
     'OCARINA': 79,
     'SYNTH_LEAD_1_SQUARE': 80,
     'SYNTH_LEAD_2_SAWTOOTH': 81,
-    'DRUM': 9 ,
-    'PIANO':0
+    'DRUM': 9,
+    'PIANO': 0
 }
 
 
 
-export function generateMusicFile(music: Music,filePath: string, destination: string | undefined): string {
+export function generateMusicFile(music: Music, filePath: string, destination: string | undefined, isPlayable: boolean | undefined): string {
     const data = extractDestinationAndName(filePath, destination);
     const generatedFilePath = `${path.join(data.destination, data.name)}.py`;
 
     const fileNode = new CompositeGeneratorNode();
-    compile(music, fileNode)
+
+    compile(music, fileNode, isPlayable)
 
 
     if (!fs.existsSync(data.destination)) {
-        fs.mkdirSync(data.destination, {recursive: true});
+        fs.mkdirSync(data.destination, { recursive: true });
     }
     fs.writeFileSync(generatedFilePath, toString(fileNode));
     return generatedFilePath;
 }
 
 
-function compile(music: Music, fileNode: CompositeGeneratorNode): void {
+function compile(music: Music, fileNode: CompositeGeneratorNode, isPlayable: boolean | undefined): void {
     fileNode.append(
         'from midiutil import MIDIFile\n'
     );
     if (music.setup !== undefined) {
         fileNode.append(
-            'import pygame.midi\n' +
+            (!isPlayable ? 'import pygame.midi\n' : 'import pygame\n') +
             'from pynput import keyboard\n' +
-            'import time\n'
+            'import time\n\n'
         );
     }
+
+    if (isPlayable) {
+        console.log("AAAAAAA")
+        fileNode.append(
+            'import pygame\n' +
+            'import time\n\n'
+        );
+        generatePlayMidiFunction(fileNode);
+    }
+
 
     if (music.tempo === undefined) { // set default tempo to 120
         music.tempo = 120;
     }
 
     for (const track_set of music.trackSet) {
-        compileTrackSet(track_set, music.tempo, track_set.time_signature , fileNode);
+        compileTrackSet(track_set, music.tempo, track_set.time_signature, fileNode);
     }
     if (music.trackSet.length > 0) {
         generateMidiFile(music.name, fileNode);
+    }
+
+    if(isPlayable){
+        addPlayMidi(music.name, fileNode)
     }
 
     if (music.setup !== undefined) {
@@ -129,22 +144,22 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
         `midi = MIDIFile(${number_of_tracks})\n`
     );
 
-    for(let i = 0; i < track_set.track.length; i++){
-       
+    for (let i = 0; i < track_set.track.length; i++) {
+
         compileTempo(i, tempo, fileNode);
         compileTimeSignature(i, time_signature, fileNode);
         compileTrack(track_set.track[i], time_signature.numerator, i, fileNode);
-        
+
     }
 }
 
-function compileTempo(track_number:number,tempo: number, fileNode: CompositeGeneratorNode) {
+function compileTempo(track_number: number, tempo: number, fileNode: CompositeGeneratorNode) {
     fileNode.append(
         `midi.addTempo(${track_number}, 0, ${tempo})\n`
     );
 }
 
-function compileTimeSignature(track_number:number,time_signature: TimeSignature, fileNode: CompositeGeneratorNode) {
+function compileTimeSignature(track_number: number, time_signature: TimeSignature, fileNode: CompositeGeneratorNode) {
     fileNode.append(
         `time_signature = ( ${time_signature.numerator} ,  ${time_signature.denominator} )\n`
     );
@@ -156,8 +171,8 @@ function compileTimeSignature(track_number:number,time_signature: TimeSignature,
 
 
 
-function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileNode: CompositeGeneratorNode): void {
-    
+function compileTrack(track: Track, time_sign: number, trackNumber: any, fileNode: CompositeGeneratorNode): void {
+
     // Set instrument for the track
     const instrumentNumber = getInstrument(track.instrument.name.toUpperCase());
 
@@ -169,14 +184,14 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
 
         const trackPartOld = trackPart
 
-        if(trackPart.reuse){
+        if (trackPart.reuse) {
             trackPart = track.parts.find(t => t.id === trackPart.reuse)!
             trackPart.start = trackPartOld.start
         }
 
 
         const repeatCount = trackPart.repeat || 1;
-        const start = trackPart.start*4
+        const start = trackPart.start * 4
         //const startFloat = parseFloat(String(start.n1) + "." + String(start.n2))
 
         // random error 
@@ -185,24 +200,24 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
 
         for (let i = 0; i < repeatCount; i++) {
 
-          
+
 
             if (track.instrument.name.toUpperCase() === 'DRUM') {
-                if(track.human_error){
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, drumMap,fileNode);
+                if (track.human_error) {
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, drumMap, fileNode);
                 }
-                else{
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign,drumMap, fileNode);
+                else {
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, drumMap, fileNode);
                 }
             }
-            
-            
+
+
             else {
-                if(track.human_error){
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError,noteMap, fileNode);
+                if (track.human_error) {
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, noteMap, fileNode);
                 }
-                else{
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign,noteMap, fileNode);
+                else {
+                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, noteMap, fileNode);
                 }
             }
         }
@@ -210,8 +225,8 @@ function compileTrack(track: Track, time_sign : number, trackNumber: any,  fileN
 }
 
 
-function getInstrument(instrument:String ) : number {
-    const instrumentNumber =instrumentsMap[instrument.toUpperCase()]
+function getInstrument(instrument: String): number {
+    const instrumentNumber = instrumentsMap[instrument.toUpperCase()]
     if (instrumentNumber === undefined) {
         throw new Error(`Unknown instrument ${instrument}`);
     }
@@ -220,52 +235,52 @@ function getInstrument(instrument:String ) : number {
 
 
 
-function compileNote(notes: Note[],instrument_number:number, track_number : any, i:number,notesMap:any, fileNode: CompositeGeneratorNode): void {
-    for(const note of notes){
-        const pitchValue = notesMap[note.pitch];''
+function compileNote(notes: Note[], instrument_number: number, track_number: any, i: number, notesMap: any, fileNode: CompositeGeneratorNode): void {
+    for (const note of notes) {
+        const pitchValue = notesMap[note.pitch]; ''
         if (pitchValue === undefined) {
             throw new Error(`Unknown pitch ${note.pitch}`);
         }
 
-        else{
+        else {
 
             let time_start = parseFloat(String(note.position.n1) + "." + String(note.position.n2)) + i
-            const channel=find_channel_from_instrument(instrument_number)
+            const channel = find_channel_from_instrument(instrument_number)
 
             if (isNoteWithError(note)) {
 
                 compileNoteWithError(track_number, channel, pitchValue, time_start, note, fileNode);
             }
 
-            else{
+            else {
                 fileNode.append(
-                `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time_start} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
+                    `midi.addNote(${track_number}, ${channel}, ${pitchValue},${time_start} ,${note.duration.n1}.${note.duration.n2}, ${note.volume})\n`);
             }
 
         }
-        
+
     }
 }
 
-function compileNoteWithError(track_number:number, channel :number, pitch:any, start_time:number,note:Note, fileNode: CompositeGeneratorNode): void {
+function compileNoteWithError(track_number: number, channel: number, pitch: any, start_time: number, note: Note, fileNode: CompositeGeneratorNode): void {
 
     const randomNumber = Math.random() * 0.2;
-    start_time += randomNumber; 
+    start_time += randomNumber;
     const volume_with_error = note.volume + generateRandomVelocityError();
 
     fileNode.append(
         `midi.addNote(${track_number}, ${channel}, ${pitch},${start_time} , ${note.duration.n1}.${note.duration.n2}, ${volume_with_error})\n`
     );
-    
+
 
 }
 
 
-function find_channel_from_instrument(instrument_number:number) : number {
-    if(instrument_number < 16){
+function find_channel_from_instrument(instrument_number: number): number {
+    if (instrument_number < 16) {
         return instrument_number
     }
-    else{
+    else {
         return 0
     }
 }
@@ -277,7 +292,7 @@ function generateRandomVelocityError() {
 
 }
 
-function generateMidiFile(name:String, fileNode:CompositeGeneratorNode) {
+function generateMidiFile(name: String, fileNode: CompositeGeneratorNode) {
     fileNode.append(
         `with open("./output/${name}.mid", "wb") as output_file:\n`
     );
@@ -286,9 +301,22 @@ function generateMidiFile(name:String, fileNode:CompositeGeneratorNode) {
     );
 }
 
+function generatePlayMidiFunction(fileNode: CompositeGeneratorNode) {
+    fileNode.append(
+        'def play_midi(midi_file_path):\n\t' +
+        'pygame.init()\n\t' +
+        'pygame.mixer.music.load(midi_file_path)\n\t' +
+        'pygame.mixer.music.play()\n\n\t' +
+        'while pygame.mixer.music.get_busy():\n\t\t' +
+        'time.sleep(1)\n\n'
+    )
+}
 
-
-
+function addPlayMidi(name: String, fileNode: CompositeGeneratorNode) {
+    fileNode.append(
+        `play_midi("./output/${name}.mid")\n`
+    )
+}
 
 
 function compileSetup(setup: Setup, fileNode: CompositeGeneratorNode) {
@@ -340,7 +368,7 @@ function compileKeys(keys: Array<Key>, fileNode: CompositeGeneratorNode) {
 
 function compileCommonSetupFunctions(fileNode: CompositeGeneratorNode) {
     fileNode.append(
-`\nstart_time=time.time()
+        `\nstart_time=time.time()
 output_file = ''
 def on_press(key):
     try:

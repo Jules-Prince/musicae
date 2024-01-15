@@ -6,20 +6,42 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-inputFilePath="scenarios/"$1".music"
+isPlayable=false
+
+while getopts ":p" opt; do
+  case $opt in
+    p)
+      isPlayable=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+inputFilePath="scenarios/$1.music"
 outputDir="generated"
 
 echo "Générer le fichier Python"
-./bin/cli.js generate "$inputFilePath"
+if $isPlayable;
+then
+  node ./bin/cli.js generate "$inputFilePath" -p
+else
+  node ./bin/cli.js generate "$inputFilePath"
+fi
 
-if [ $? -ne 0 ]; then
+if [ $? -ne 0 ]; 
+then
   echo "Erreur lors de la génération"
   exit 1
 fi
 
 echo "Exécuter le fichier Python généré"
 generatedFilePath="$outputDir/$1.py"
-python "$generatedFilePath"
+python3 "$generatedFilePath"
 
 if [ $? -ne 0 ]; then
   echo "Erreur lors de l'exécution"
