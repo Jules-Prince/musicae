@@ -4,7 +4,7 @@ music billiejean {
         4, 4
     }
     track 1 {
-        instrument DRUM
+        instrument "DRUM"
         human_error true
         trackPart track_1{
             start 0.0
