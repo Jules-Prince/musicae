@@ -68,6 +68,10 @@
             {
                 "command": "musicae.runScenario",
                 "title": "Run Scenario"
+            },
+            {
+                "command": "myExtension.sayHello",
+                "title": "Say Hello"
             }
         ],
         "menus": {
@@ -77,11 +81,20 @@
                     "command": "musicae.runScenario",
                     "group": "navigation"
                 }
+            ],
+            "commandPalette": [
+                {
+                  "command": "myExtension.sayHello",
+                  "when": "editorLangId == markdown"
+                }
             ]
         }
     },
     "activationEvents": [
-        "onCommand:musicae.runScenario"
+        "*",
+        "onLanguage:musicae",
+        "onCommand:musicae.runScenario",
+        "onCommand:myExtension.sayHello"
     ],
     "main": "./out/extension/main.cjs",
     "bin": {

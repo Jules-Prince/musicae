@@ -5,34 +5,38 @@ import { LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
 
 let client: LanguageClient;
 
+export function runScenario() {
+    // Determine the path to the currently open file
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        vscode.window.showInformationMessage('No script file is open');
+        return;
+    }
+    const filePath = editor.document.fileName;
+
+    // Run the command e.g., python script.py
+    const terminal = vscode.window.createTerminal('Musicae Scenario');
+    terminal.show();
+    terminal.sendText(`python "${filePath}"`); // todo: update the commande
+};
+
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
     client = startLanguageClient(context);
-    // vscode.commands.registerTextEditorCommand
-    let runScenario = () => {
-        // Determine the path to the currently open file
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showInformationMessage('No script file is open');
-            return;
-        }
-        const filePath = editor.document.fileName;
 
-        // Run the command e.g., python script.py
-        const terminal = vscode.window.createTerminal('Musicae Scenario');
-        terminal.show();
-        terminal.sendText(`python "${filePath}"`); // todo: update the commande
+    let disposable = vscode.commands.registerCommand('musicae.runScenario', runScenario);
+    let disposable2 = vscode.commands.registerTextEditorCommand('musicae.runScenario', runScenario);
+    context.subscriptions.push(disposable);
+    context.subscriptions.push(disposable2);
+    vscode.commands.executeCommand('musicae.runScenario')
+
+    const command = 'myExtension.sayHello';
+    const commandHandler = (name: string = 'world') => {
+        console.log(`Hello ${name}!!!`);
     };
-
-    vscode.commands.registerCommand('musicae.runScenario', runScenario),
-    vscode.commands.registerTextEditorCommand('musicae.runScenario', runScenario)
-    context.subscriptions.push(
-        vscode.commands.registerCommand('musicae.runScenario', runScenario),
-        vscode.commands.registerTextEditorCommand('musicae.runScenario', runScenario)
-    );
-
+    
+    context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
 }
-
 
 // This function is called when the extension is deactivated.
 export function deactivate(): Thenable<void> | undefined {
