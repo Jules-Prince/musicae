@@ -32,15 +32,19 @@ https://langium.org/tutorials/generation/
 ```mermaid
 
 classDiagram
-    Music "1" o-- "0 . *" TrackSet
-    Track "1" o-- "0 . *" TrackPart
-    TrackSet "1" o-- "1" TimeSignature
-    TrackSet "1" o-- "0 . *" Track
-    TrackPart "1" o-- "0 . *" Note
+    Music "1" *-- "0 . *" TrackSet
+    Track "1" *-- "0 . *" TrackPart
+    TrackSet "1" *-- "1" TimeSignature
+    TrackSet "1" *-- "0 . *" Track
+    TrackPart "1" *-- "0 . *" Note
     Note <|-- NormalNote
     Note <|-- NoteWithError
-    Music "1" o-- "0 . 1" Setup
-    Setup "1" o-- "0 . *" Key
+    Music "1" *-- "0 . 1" Setup
+    Setup "1" *-- "0 . *" Key
+    ReuseTrackPart "1" *-- "0 . 1" ReuseWithReplacement
+    ReuseWithReplacement "1" *-- "0 . *" NoteReplacement
+    TrackPart <|-- ReuseTrackPart
+    TrackPart <-- ReuseTrackPart
 
     class Music{
       +String id
@@ -59,7 +63,22 @@ classDiagram
     class TrackPart{
         +int start
         +int? repeat
-        +String? reuse
+    }
+
+    
+
+    class ReuseTrackPart{
+
+    }
+
+    class ReuseWithReplacement{
+
+
+    }
+
+    class NoteReplacement{
+        +int id
+        +String note
     }
     
     class TimeSignature{
