@@ -17,12 +17,13 @@ const packageContent = await fs.readFile(packagePath, 'utf-8');
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createMusicaeServices(NodeFileSystem).Musicae;
     const model = await extractAstNode<Music>(fileName, services);
-    const generatedFilePath = generateMusicFile(model, fileName, opts.destination);
+    const generatedFilePath = generateMusicFile(model, fileName, opts.destination, opts.play);
     console.log(chalk.green(`JavaScript code generated successfully: ${generatedFilePath}`));
 };
 
 export type GenerateOptions = {
     destination?: string;
+    play?: boolean;
 }
 
 export default function(): void {
@@ -35,6 +36,7 @@ export default function(): void {
         .command('generate')
         .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
         .option('-d, --destination <dir>', 'destination directory of generating')
+        .option('-p, --play', 'play midi file after creation')
         .description('generates JavaScript code that prints "Hello, {name}!" for each greeting in a source file')
         .action(generateAction);
 
