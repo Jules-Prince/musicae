@@ -44,6 +44,7 @@ classDiagram
     ReuseTrackPart "1" *-- "0 . 1" ReuseWithReplacement
     ReuseWithReplacement "1" *-- "0 . *" NoteReplacement
     TrackPart <-- ReuseTrackPart
+    TrackPart "1" *-- "0 . 1"ReuseTrackPart
 
     class Music{
       +String id
