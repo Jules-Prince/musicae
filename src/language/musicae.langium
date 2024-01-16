@@ -27,15 +27,23 @@ Track:
     '}';
 
 TrackPart:
+    NormalTrackPart | ReuseTrackPart;
+
+
+NormalTrackPart:
     'trackPart' id=ID '{'
         'start' start=INT
         ('repeat' repeat=INT)?
         notes+=Note*
-        (reuseTrackPart=ReuseTrackPart)?
     '}';
 
 ReuseTrackPart:
-    'reuse' reuse=STRING  (reuseWithReplacement=ReuseWithReplacement)?;
+    'trackPart' id=ID '{'
+        'start' start=INT
+        ('repeat' repeat=INT)?
+        'reuse' reuse=STRING  (reuseWithReplacement=ReuseWithReplacement)?
+    '}';
+    
 
 ReuseWithReplacement:
         'replace' '{'

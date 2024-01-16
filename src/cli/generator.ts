@@ -1,5 +1,5 @@
 
-import {type Music,type Note,type Track, type TrackSet, type TimeSignature, isNoteWithError,Setup, Key, TrackPart, NoteReplacement, isNoteDuration, Float, NoteDuration} from '../language/generated/ast.js';
+import {type Music,type Note,type Track, type TrackSet, type TimeSignature, isNoteWithError,Setup, Key, TrackPart, NoteReplacement, isNoteDuration, Float, NoteDuration, isReuseTrackPart, isNormalTrackPart} from '../language/generated/ast.js';
 import * as fs from 'node:fs';
 import { CompositeGeneratorNode, toString } from 'langium';
 import * as path from 'node:path';
@@ -192,16 +192,18 @@ function compileTrack(track: Track, time_sign: number, trackNumber: any, fileNod
 
     //let previous : TrackPart = track.parts[0]
 
-    for (let trackPart of track.parts) {
+    for (let trackPart  of track.parts) {
         
 
         const trackPartOld = trackPart
 
-        if (trackPart.reuseTrackPart?.reuse) {
-            trackPart = track.parts.find(t => t.id === trackPart.reuseTrackPart?.reuse)!
+        if ( isReuseTrackPart(trackPart)) {
+            let new_id  = trackPart.reuse
+            let replacements = trackPart.reuseWithReplacement
+            trackPart = track.parts.find(t => t.id === new_id )!
             trackPart.start = trackPartOld.start
-            if(trackPartOld.reuseTrackPart?.reuseWithReplacement){
-                compilePreviousRemplacement(trackPart, trackPartOld?.reuseTrackPart.reuseWithReplacement.notesreplacement ,  fileNode)
+            if(replacements){
+                compilePreviousRemplacement(trackPart, replacements.notesreplacement ,  fileNode)
 
 
             }
@@ -220,24 +222,25 @@ function compileTrack(track: Track, time_sign: number, trackNumber: any, fileNod
 
         for (let i = 0; i < repeatCount; i++) {
 
+            if(isNormalTrackPart(trackPart)){
 
-
-            if (track.instrument.name.toUpperCase() === 'DRUM') {
-                if (track.human_error) {
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, drumMap, fileNode);
+                if (track.instrument.name.toUpperCase() === 'DRUM') {
+                    if (track.human_error) {
+                        compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, drumMap, fileNode);
+                    }
+                    else {
+                        compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, drumMap, fileNode);
+                    }
                 }
+
+
                 else {
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, drumMap, fileNode);
-                }
-            }
-
-
-            else {
-                if (track.human_error) {
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, noteMap, fileNode);
-                }
-                else {
-                    compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, noteMap, fileNode);
+                    if (track.human_error) {
+                        compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign + randomError, noteMap, fileNode);
+                    }
+                    else {
+                        compileNote(trackPart.notes, instrumentNumber, trackNumber, start + i * time_sign, noteMap, fileNode);
+                    }
                 }
             }
 
@@ -260,19 +263,21 @@ function compilePreviousRemplacement(trackPart: TrackPart,  notesremplacements :
         for (let i=0; i < notesremplacements.length; i++){
             newNotesMap[notesremplacements[i].id] = notesremplacements[i].note
         }
-    
-    
-        for (let i=0; i < trackPart.notes.length; i++){
-            oldnotesMap[i] =trackPart.notes[i].pitch
-        }
-    
 
-        // replace notes
-        for (let i=0; i < trackPart.notes.length; i++){
-            if(newNotesMap[i] !== undefined){
-                trackPart.notes[i].pitch = newNotesMap[i]
+        if(isNormalTrackPart(trackPart)){
+    
+    
+            for (let i=0; i < trackPart.notes.length; i++){
+                oldnotesMap[i] =trackPart.notes[i].pitch
+            }
+
+            for (let i=0; i < trackPart.notes.length; i++){
+                if(newNotesMap[i] !== undefined){
+                    trackPart.notes[i].pitch = newNotesMap[i]
+                }
             }
         }
+            
 
     }
    
