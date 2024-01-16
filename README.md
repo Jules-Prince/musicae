@@ -59,7 +59,8 @@ classDiagram
     class Track{
       +int id
       +String instrument
-      +boolean human_error
+      +int? tempo
+      +boolean? human_error
     }
 
     class TrackPart{
@@ -74,6 +75,7 @@ classDiagram
     
 
     class ReuseTrackPart{
+        + string reuse
 
     }
 
