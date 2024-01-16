@@ -36,7 +36,7 @@ classDiagram
     Track "1" *-- "0 . *" TrackPart
     TrackSet "1" *-- "1" TimeSignature
     TrackSet "1" *-- "0 . *" Track
-    TrackPart "1" *-- "0 . *" Note
+    NormalTrackPart "1" *-- "0 . *" Note
     Note <|-- NormalNote
     Note <|-- NoteWithError
     Music "1" *-- "0 . 1" Setup
@@ -44,7 +44,8 @@ classDiagram
     ReuseTrackPart "1" *-- "0 . 1" ReuseWithReplacement
     ReuseWithReplacement "1" *-- "0 . *" NoteReplacement
     TrackPart <|-- ReuseTrackPart
-    TrackPart <-- ReuseTrackPart
+    TrackPart <|-- NormalTrackPart
+
 
     class Music{
       +String id
@@ -63,6 +64,10 @@ classDiagram
     class TrackPart{
         +int start
         +int? repeat
+    }
+
+    class NormalTrackPart{
+        
     }
 
     
