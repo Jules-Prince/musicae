@@ -7,7 +7,7 @@ music barModif {
         instrument "DRUM"
         trackPart part1{
             start 0
-            "sd", 1.0 , quarter, 90
+            "sd", 1.0 , whole, 90
             "sd", 1.0 , 1.0 , 90
         }
 
@@ -19,9 +19,9 @@ music barModif {
                 note 1 => "cc"
             }
 
-            
-            
-
+        
         }
     }
+
+    
 }
