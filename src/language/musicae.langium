@@ -22,6 +22,7 @@ Setup:
 Track:
     'track' id=INT '{'
         'instrument' instrument=Instrument
+        ('tempo' tempo=INT)?
         ('human_error' human_error=BOOLEAN)?
         parts+=TrackPart*
     '}';

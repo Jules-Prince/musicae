@@ -19,9 +19,9 @@ music barModif {
                 note 1 => "cc"
             }
 
-            
-            
-
+        
         }
     }
+
+    
 }

@@ -41,7 +41,7 @@ fi
 
 echo "Exécuter le fichier Python généré"
 generatedFilePath="$outputDir/$1.py"
-python3 "$generatedFilePath"
+python "$generatedFilePath"
 
 if [ $? -ne 0 ]; then
   echo "Erreur lors de l'exécution"

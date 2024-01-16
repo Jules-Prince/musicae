@@ -156,9 +156,13 @@ function compileTrackSet(track_set: TrackSet, tempo: any, time_signature: TimeSi
 
     for (let i = 0; i < track_set.track.length; i++) {
 
+        if(track_set.track[i].tempo){
+            tempo = track_set.track[i].tempo
+        }
         compileTempo(i, tempo, fileNode);
         compileTimeSignature(i, time_signature, fileNode);
         compileTrack(track_set.track[i], time_signature.numerator, i, fileNode);
+        
 
     }
 }
