@@ -59,6 +59,7 @@ classDiagram
     class Track{
       +int id
       +String instrument
+      +boolean human_error
     }
 
     class TrackPart{
