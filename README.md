@@ -46,6 +46,15 @@ classDiagram
     TrackPart <|-- ReuseTrackPart
     TrackPart <|-- NormalTrackPart
 
+    class NoteDuration{
+        <<enumeration>>
+        WHOLE
+        HALF
+        QUARTER
+        EIGHTH
+        SIXTEENTH
+        THIRTYSECOND
+    }
 
     class Music{
       +String id
