@@ -43,7 +43,6 @@ classDiagram
     Setup "1" *-- "0 . *" Key
     ReuseTrackPart "1" *-- "0 . 1" ReuseWithReplacement
     ReuseWithReplacement "1" *-- "0 . *" NoteReplacement
-    TrackPart <|-- ReuseTrackPart
     TrackPart <-- ReuseTrackPart
 
     class Music{
