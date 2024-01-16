@@ -20,7 +20,7 @@ Setup:
     '}';
 
 Track:
-    'track' id=INT '{'
+    'track'  '{'
         'instrument' instrument=Instrument
         ('tempo' tempo=INT)?
         ('human_error' human_error=BOOLEAN)?

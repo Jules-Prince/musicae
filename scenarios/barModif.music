@@ -3,7 +3,7 @@ music barModif {
     time_signature {
         4, 4
     }
-    track 1 {
+    track {
         instrument "DRUM"
         trackPart part1{
             start 0

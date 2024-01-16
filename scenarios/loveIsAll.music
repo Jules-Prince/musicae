@@ -3,7 +3,7 @@ music loveisAll {
     time_signature {
         4, 4
     }
-    track 1 {
+    track{
         instrument "DRUM"
         trackPart part1{
             start 0
@@ -88,7 +88,7 @@ music loveisAll {
         }
     }
 
-    track 2{
+    track {
         instrument "BASS"
         trackPart part1{
             start 1
