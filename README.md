@@ -120,15 +120,26 @@ classDiagram
     class NormalNote {
         +String pitch
         +Float position
-        +Float duration
         +int volume
     }
 
     class NoteWithError {
         +String pitch
         +Float position
-        +Float duration
         +int volume
         +boolean with_error
+    }
+
+    Duration <|-- NoteDuration
+    Duration <|-- FloatDuration
+    NormalNote *-- Duration
+    NoteWithError *-- Duration
+
+    class Duration{
+
+    }
+
+    class FloatDuration{
+        +Float duration
     }
 ```
