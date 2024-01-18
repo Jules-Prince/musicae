@@ -1,0 +1,31 @@
+music song_with_bar_modification {
+    tempo 110
+    time_signature {
+        4, 4
+    }
+    track {
+        instrument "DRUM"
+        trackPart part1{
+            start 0
+            repeat 4
+            "ch", 0.0, quarter, 90
+            "bd", 0.0, 1.0, 90
+            "ch", 0.5, 1.0, 90
+            "sd", 1.0,1.0 , 90
+        }
+
+        trackPart part2{
+            start 5
+            reuse "part1" 
+            replace {
+                note 0 => "bd"
+                note 1 => "cc"
+                note 3 => "oh"
+            }
+
+        
+        }
+    }
+
+    
+}

@@ -10,3 +10,4 @@ static/monaco-editor-workers/
 static/worker/
 syntaxes/
 .idea/
+.DS_STORE

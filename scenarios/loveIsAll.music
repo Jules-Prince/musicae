@@ -1,0 +1,102 @@
+music loveisAll {
+    tempo 110
+    time_signature {
+        4, 4
+    }
+    track{
+        instrument "DRUM"
+        trackPart part1{
+            start 0
+            "sd", 3.0 , 1.0 , 90
+
+        }
+        trackPart part2{
+            start 1
+            repeat 2
+            "oh", 0.0, 1.0, 100
+            "oh", 1.0, 1.0, 100
+            "oh", 2.0, 1.0, 100
+            "oh", 3.0, 1.0, 100
+        }
+
+        trackPart part3{
+            start 3
+            "oh", 0.0, 0.5, 100
+            "sd", 0.0 , 0.5 , 90
+            "sd", 0.5 , 0.5 , 90
+            "sd", 1.0 , 0.5 , 90
+            "sd", 1.5 , 0.5, 90
+            "sd", 2.0 , 0.5 , 90
+            "sd", 2.5 , 0.5 , 90
+            "sd", 3.0 , 0.5 , 90
+            "sd", 3.5 , 0.5 , 90
+
+            
+        }
+
+        trackPart part4{
+            start 4
+
+            "sd", 1.0 , 1.0 , 90
+            "chc", 1.0 , 1.0 , 90
+
+            "sd", 3.0 , 1.0 , 90
+            "ht", 3.0 , 1.0 , 90
+        }
+
+        trackPart couplet1{
+            start 5
+            repeat 7
+
+            "oh", 0.0, 1.0, 100
+            "bd", 0.0, 1.0, 100
+
+            "oh", 1.0, 1.0, 100
+            "sd", 1.0, 1.0, 100
+
+            "oh", 2.0, 1.0, 100
+            "bd", 2.0, 1.0, 100
+
+            "oh", 3.0, 1.0, 100
+            "sd", 3.0, 1.0, 100
+        }
+
+        trackPart part5{
+            start 12
+
+            "oh", 0.0, 1.0, 100
+            "bd", 0.0, 1.0, 100
+            "oh", 1.0, 1.0, 100
+            "sd", 1.0, 1.0, 100
+            "bd", 2.0, 0.3, 100
+            "sd", 2.0, 0.3, 100
+            "sd", 2.3, 0.3, 100
+            "sd", 2.6, 0.3, 100
+            "bd", 3.0, 0.3, 100
+            "lmt", 3.0, 0.3, 100
+            "sd", 3.0, 0.3, 100
+            "lmt", 3.3, 0.3, 100
+            "sd", 3.3, 0.3, 100
+            "lmt", 3.6, 0.3, 100
+            "sd", 3.6, 0.3, 100
+        }
+
+        trackPart couplet2{
+            start 13
+            reuse "couplet1"
+
+        }
+    }
+
+    track {
+        instrument "BASS"
+        trackPart part1{
+            start 1
+
+            "B2", 0.0, 1.0, 90
+
+        }
+
+
+    }
+}

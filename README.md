@@ -1,17 +1,28 @@
 # musicDSL
 DSL to create music
 
-
-# Genere le generator.ts
 npm run langium:generate
-
-# Je ne sais pas 
 npm run build
 
-# Run un scénario 
-./bin/cli.js generate scenarios/test3.music 
+# Scénario
 
-# Doc cool 
+Les scénarios sont à mettre dans le dossier ./scenarios. L'extention doit être .music
+
+Exemple : my_song.music
+
+# Build un scénario 
+
+Il y a un script qui build les scénarios pour avoir dans le dossier ./output, le fichier .mid correspondant. 
+
+``` bash
+./runScenario.sh  NOM_DU_SCENARIO
+```
+
+NOM_DU_SCENARIO est le nom du fichier scénario, dans ./scenario.
+
+Exemple : ./runScenario my_song
+
+# Documentation languim 
 
 https://langium.org/tutorials/generation/
 
@@ -21,30 +32,74 @@ https://langium.org/tutorials/generation/
 ```mermaid
 
 classDiagram
-    Music o-- Track
-    Track o-- TrackPart
-    TrackPart -- TimeSignature
-    TrackPart o-- Bar
-    Note o-- Pitch
-    Bar o-- Beat
-    Beat o-- Note
+    Music *-- "0 . *" TrackSet
+    Track *-- "0 . *" TrackPart
+    TrackSet *-- "1" TimeSignature
+    TrackSet *-- "0 . *" Track
+    NormalTrackPart *-- "0 . *" Note
+    Note <|-- NormalNote
+    Note <|-- NoteWithError
+    Music *-- "0 . 1" Setup
+    Setup *-- "0 . *" Key
+    ReuseTrackPart *-- "0 . 1" ReuseWithReplacement
+    ReuseWithReplacement *-- "0 . *" NoteReplacement
+    TrackPart <|-- ReuseTrackPart
+    TrackPart <|-- NormalTrackPart
+    Duration <|-- NoteDuration
+    Duration <|-- FloatDuration
+    NormalNote *-- "1" Duration
+    NoteWithError *-- "1" Duration
+
+    class NoteDuration{
+        <<enumeration>>
+        WHOLE
+        HALF
+        QUARTER
+        EIGHTH
+        SIXTEENTH
+        THIRTYSECOND
+    }
 
     class Music{
       +String id
-      +int tempo
+      +int? tempo
+    }
+
+    class TrackSet{
+
     }
 
     class Track{
       +int id
       +String instrument
+      +int? tempo
+      +boolean? human_error
     }
-    
-    class TrackPart{
-    }
-    
-    class Bar{
-        +int counter
 
+    class TrackPart{
+        +int start
+        +int? repeat
+    }
+
+    class NormalTrackPart{
+        
+    }
+
+    
+
+    class ReuseTrackPart{
+        + string reuse
+
+    }
+
+    class ReuseWithReplacement{
+
+
+    }
+
+    class NoteReplacement{
+        +int id
+        +String note
     }
     
     class TimeSignature{
@@ -52,16 +107,39 @@ classDiagram
         +int denominateur
     }
 
-    class Beat{
+    class Setup {
+      +int id
+      +String instrument
+    }
+
+    class Key {
+        +String name
+        +String note
+    }
+
+    class Note {
 
     }
 
-    class Note{
-        +int duration
+    class NormalNote {
+        +String pitch
+        +Float position
+        +int volume
     }
 
-    class Pitch{
-        +String values
+    class NoteWithError {
+        +String pitch
+        +Float position
+        +int volume
+        +boolean with_error
+    }
+
+    class Duration{
+
+    }
+
+    class FloatDuration{
+        +Float duration
     }
 
 ```
