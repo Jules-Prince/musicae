@@ -3,6 +3,73 @@ music loveisAll {
     time_signature {
         4, 4
     }
+
+    track{
+        instrument "BASS"
+
+            trackPart track_1{
+                start 1
+                repeat 1
+                "G2", 0.0, 1.0, 90
+                "A#2", 1.0, 1.0, 90
+                "A2", 2.0, 1.0, 90
+                "B2", 3.0 , 1.0 , 90
+            }
+            trackPart track_2{
+                start 2
+                repeat 1
+                "D3", 0.0, 1.0, 90
+                "E3", 1.0, 1.0, 90
+                "F#3", 2.0, 1.0, 90
+                "A#3", 3.0 , 1.0 , 90
+            }
+             trackPart track_3{
+                start 3
+                repeat 1
+                "G2", 0.0, 1.0, 90
+                "F#2", 1.0, 1.0, 90
+                "A#2", 2.0, 1.0, 90
+                "B2", 3.0 , 1.0 , 90
+            }
+            trackPart track_4{
+                start 4
+                repeat 1
+                "E3", 0.0, 4.0, 90
+            }
+            trackPart track_5{
+                start 5
+                repeat 1
+                "E5", 0.0, 4.0, 90
+                "E5", 1.0, 4.0, 90
+                "G5", 2.0, 4.0, 90
+                "G5", 3.0, 4.0, 90
+            }
+            trackPart track_6{
+                start 6
+                repeat 1
+                "B5", 0.0, 4.0, 90
+                "B5", 1.0, 4.0, 90
+                "C6", 2.0, 4.0, 90
+                "C6", 3.0, 4.0, 90
+            }
+            trackPart track_7{
+                start 7
+                repeat 1
+                "D6", 0.0, 4.0, 90
+                "E6", 1.0, 4.0, 90
+                "E6", 2.0, 4.0, 90
+                "E6", 3.0, 4.0, 90
+            }
+            trackPart track_8{
+                start 8
+                repeat 1
+                "E6", 0.0, 4.0, 90
+                "G5", 1.0, 4.0, 90
+                "G5", 2.0, 4.0, 90
+                "A5", 3.0, 4.0, 90
+            }
+    }
+
     track{
         instrument "DRUM"
         trackPart part1{
