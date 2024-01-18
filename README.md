@@ -44,6 +44,7 @@ classDiagram
     ReuseTrackPart *-- "0 . 1" ReuseWithReplacement
     ReuseWithReplacement *-- "0 . *" NoteReplacement
     TrackPart <|-- ReuseTrackPart
+    TrackPart <-- ReuseTrackPart
     TrackPart <|-- NormalTrackPart
     Duration <|-- NoteDuration
     Duration <|-- FloatDuration
@@ -141,5 +142,6 @@ classDiagram
     class FloatDuration{
         +Float duration
     }
+
 
 ```
