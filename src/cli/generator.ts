@@ -128,6 +128,15 @@ function compile(music: Music, fileNode: CompositeGeneratorNode, isPlayable: boo
         music.tempo = 120;
     }
 
+    let number_of_tracks=0
+    for (const trackSet of music.trackSet) {
+        number_of_tracks+=trackSet.track.length
+    }
+    console.log(number_of_tracks)
+    fileNode.append(
+        `midi = MIDIFile(${number_of_tracks})\n`
+    );
+
     for (const track_set of music.trackSet) {
         const index = music.trackSet.indexOf(track_set);
         compileTrackSet(track_set, index, music.tempo, track_set.time_signature, fileNode);
@@ -156,9 +165,7 @@ function compileTrackSet(track_set: TrackSet, trackset_index:number, tempo: any,
         number_of_tracks+=track.parts.length
     }
     //const number_of_tracks = track_set.track.length;
-    fileNode.append(
-        `midi = MIDIFile(${number_of_tracks})\n`
-    );
+    
 
     for (let i = 0; i < track_set.track.length; i++) {
 
@@ -239,6 +246,10 @@ function compileTrack(track: Track, time_sign: number, trackNumber: any, track_n
                         compileNote(trackPart.notes, instrumentNumber, trackNumber, track_number_offset,start + i * time_sign + randomError, drumMap, fileNode);
                     }
                     else {
+                        console.log(start)
+                        console.log(i)
+                        console.log(time_sign)
+
                         compileNote(trackPart.notes, instrumentNumber, trackNumber, track_number_offset,start + i * time_sign, drumMap, fileNode);
                     }
                 }
@@ -249,6 +260,7 @@ function compileTrack(track: Track, time_sign: number, trackNumber: any, track_n
                         compileNote(trackPart.notes, instrumentNumber, trackNumber,track_number_offset, start + i * time_sign + randomError, noteMap, fileNode);
                     }
                     else {
+
                         compileNote(trackPart.notes, instrumentNumber, trackNumber,track_number_offset, start + i * time_sign, noteMap, fileNode);
                     }
                 }
