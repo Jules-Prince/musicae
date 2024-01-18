@@ -1,0 +1,31 @@
+music time_signature_change {
+    tempo 110
+    time_signature {
+        4, 4
+    }
+    track {
+        instrument "BASS"
+        trackPart track_1{
+            start 1
+            repeat 1
+            "G2", 0.0, 1.0, 90
+            "A#2", 1.0, 1.0, 90
+            "A2", 2.0, 1.0, 90
+            "B2", 3.0 , 1.0 , 90
+        }
+    }
+
+    time_signature {
+        3, 4
+    }
+    track {
+        instrument "DRUM"
+        trackPart part2{
+            start 4
+            repeat 4
+            "ch", 0.0, quarter, 90
+            "bd", 1.0, 1.0, 90
+            "ch", 2.0, 1.0, 90
+        }
+    }
+}
