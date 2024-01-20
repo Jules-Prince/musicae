@@ -2,14 +2,14 @@
 
 1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
 
-npm run langium:generate
-npm run build
+    npm run langium:generate
+    npm run build
 
 2) Ensuite il faut installer les libraires  suivantes : 
 
-pip install MIDIUtil
-pip install pygame
-pip install pynput
+    pip install MIDIUtil
+    pip install pygame
+    pip install pynput
 
 
 # Scénario
