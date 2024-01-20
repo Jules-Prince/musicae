@@ -1,4 +1,4 @@
-# musicDSL
+# Musicae
 
 1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
 
@@ -10,7 +10,6 @@
     pip install MIDIUtil
     pip install pygame
     pip install pynput
-
 
 # Scénario
 
