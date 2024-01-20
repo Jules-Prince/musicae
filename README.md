@@ -1,8 +1,15 @@
 # musicDSL
-DSL to create music
+
+Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
 
 npm run langium:generate
 npm run build
+
+Ensuite il faut installer les libraires python suivantes : 
+
+pip install MIDIUtil
+pip install pygame
+pip install pynput
 
 # Scénario
 
