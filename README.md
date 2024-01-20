@@ -1,6 +1,8 @@
 # Musicae
 
-1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
+1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes :
+
+    npm install
 
     npm run langium:generate
    
