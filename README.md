@@ -1,15 +1,16 @@
 # musicDSL
 
-Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
+1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
 
 npm run langium:generate
 npm run build
 
-Ensuite il faut installer les libraires python suivantes : 
+2) Ensuite il faut installer les libraires  suivantes : 
 
 pip install MIDIUtil
 pip install pygame
 pip install pynput
+
 
 # Scénario
 
@@ -19,15 +20,27 @@ Exemple : my_song.music
 
 # Build un scénario 
 
-Il y a un script qui build les scénarios pour avoir dans le dossier ./output, le fichier .mid correspondant. 
+Pour executer un scénario il suffit de lancer le script suivant en passant en paramètre le nom du fichier de scénario ( sans extension et sans path ). 
 
 ``` bash
 ./runScenario.sh  NOM_DU_SCENARIO
 ```
+Le fichier .mid de sortie sera placé dans le dossier ./output
 
-NOM_DU_SCENARIO est le nom du fichier scénario, dans ./scenario.
+Vous pouvez trouvez le fichier python intérmediare dans le dossier ./generated 
+
 
 Exemple : ./runScenario my_song
+
+# Add-on extension vscode : 
+
+- `npm i --save-dev esbuild`
+- `npm install -g @vscode/vsce`
+- Run `vsce package` to package the extension.
+  
+Ensuite, un fichier portant le nom musicae-0.0.1.vsix sera créé dans le répertoire principal. Faites un clic droit dessus et sélectionnez "Installer l'extension VSIX".
+
+# Add-on 
 
 # Documentation languim 
 
