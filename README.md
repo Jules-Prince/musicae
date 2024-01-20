@@ -62,8 +62,8 @@ classDiagram
     }
 
     class Music{
-      +String id
-      +int? tempo
+      name : ID
+      tempo : INT
     }
 
     class TrackSet{
@@ -71,15 +71,15 @@ classDiagram
     }
 
     class Track{
-      +int id
-      +String instrument
-      +int? tempo
-      +boolean? human_error
+       instrument :String
+       tempo : INT
+       human_error : Boolean
     }
 
     class TrackPart{
-        +int start
-        +int? repeat
+        id : ID
+        start : INT
+        repeat : INT
     }
 
     class NormalTrackPart{
@@ -89,7 +89,7 @@ classDiagram
     
 
     class ReuseTrackPart{
-        + string reuse
+        reuse : String
 
     }
 
@@ -99,40 +99,37 @@ classDiagram
     }
 
     class NoteReplacement{
-        +int id
-        +String note
+        id : INT
+        note : String
     }
     
     class TimeSignature{
-        +int numerateur
-        +int denominateur
+        numerateur : INT
+        denominateur : INT
     }
 
     class Setup {
-      +int id
-      +String instrument
+       instrument : String
     }
 
     class Key {
-        +String name
-        +String note
+         name : String
+         note : String
     }
 
     class Note {
+        pitch : String
+        position : Float
+        volume : INT
 
     }
 
     class NormalNote {
-        +String pitch
-        +Float position
-        +int volume
+         
     }
 
     class NoteWithError {
-        +String pitch
-        +Float position
-        +int volume
-        +boolean with_error
+        with_error : Boolean 
     }
 
     class Duration{
@@ -140,7 +137,7 @@ classDiagram
     }
 
     class FloatDuration{
-        +Float duration
+        duration : Float 
     }
 
 
