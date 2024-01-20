@@ -3,12 +3,15 @@
 1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes : 
 
     npm run langium:generate
+   
     npm run build
 
-2) Ensuite il faut installer les libraires  suivantes : 
+3) Ensuite il faut installer les libraires  suivantes : 
 
     pip install MIDIUtil
+   
     pip install pygame
+   
     pip install pynput
 
 # Scénario
@@ -53,7 +56,6 @@ Cette extension ne marche que avec l'IDE Vscode de microsoft
   
 Ensuite, un fichier portant le nom musicae-0.0.1.vsix sera créé dans le répertoire principal. Faites un clic droit dessus et sélectionnez "Installer l'extension VSIX".
 
-# Add-on 
 
 # Documentation languim 
 
