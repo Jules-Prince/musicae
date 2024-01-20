@@ -32,7 +32,21 @@ Vous pouvez trouvez le fichier python intérmediare dans le dossier ./generated
 
 Exemple : ./runScenario my_song
 
-# Add-on extension vscode : 
+## Add-on
+
+### Autoplay
+
+Il est possible de jouer le fichier midi après sa génération.
+
+Pour ce faire, il faut ajouter l'argument "-p" au lancement du script.
+
+```bash
+./runScenario.sh -p  NOM_DU_SCENARIO
+```
+
+### Extension vscode : 
+
+Cette extension ne marche que avec l'IDE Vscode de microsoft
 
 - `npm i --save-dev esbuild`
 - `npm install -g @vscode/vsce`
