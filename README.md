@@ -1,8 +1,20 @@
-# musicDSL
-DSL to create music
+# Musicae
 
-npm run langium:generate
-npm run build
+1) Pour compiler le DSL, il faut lancer les deux  commandes suivantes :
+
+    npm install
+
+    npm run langium:generate
+   
+    npm run build
+
+3) Ensuite il faut installer les libraires  suivantes : 
+
+    pip install MIDIUtil
+   
+    pip install pygame
+   
+    pip install pynput
 
 # Scénario
 
@@ -12,15 +24,40 @@ Exemple : my_song.music
 
 # Build un scénario 
 
-Il y a un script qui build les scénarios pour avoir dans le dossier ./output, le fichier .mid correspondant. 
+Pour executer un scénario il suffit de lancer le script suivant en passant en paramètre le nom du fichier de scénario ( sans extension et sans path ). 
 
 ``` bash
 ./runScenario.sh  NOM_DU_SCENARIO
 ```
+Le fichier .mid de sortie sera placé dans le dossier ./output
 
-NOM_DU_SCENARIO est le nom du fichier scénario, dans ./scenario.
+Vous pouvez trouvez le fichier python intérmediare dans le dossier ./generated 
+
 
 Exemple : ./runScenario my_song
+
+## Add-on
+
+### Autoplay
+
+Il est possible de jouer le fichier midi après sa génération.
+
+Pour ce faire, il faut ajouter l'argument "-p" au lancement du script.
+
+```bash
+./runScenario.sh -p  NOM_DU_SCENARIO
+```
+
+### Extension vscode : 
+
+Cette extension ne marche que avec l'IDE Vscode de microsoft
+
+- `npm i --save-dev esbuild`
+- `npm install -g @vscode/vsce`
+- Run `vsce package` to package the extension.
+  
+Ensuite, un fichier portant le nom musicae-0.0.1.vsix sera créé dans le répertoire principal. Faites un clic droit dessus et sélectionnez "Installer l'extension VSIX".
+
 
 # Documentation languim 
 
@@ -62,8 +99,8 @@ classDiagram
     }
 
     class Music{
-      +String id
-      +int? tempo
+      name : ID
+      tempo : INT
     }
 
     class TrackSet{
@@ -71,15 +108,15 @@ classDiagram
     }
 
     class Track{
-      +int id
-      +String instrument
-      +int? tempo
-      +boolean? human_error
+       instrument :String
+       tempo : INT
+       human_error : Boolean
     }
 
     class TrackPart{
-        +int start
-        +int? repeat
+        id : ID
+        start : INT
+        repeat : INT
     }
 
     class NormalTrackPart{
@@ -89,7 +126,7 @@ classDiagram
     
 
     class ReuseTrackPart{
-        + string reuse
+        reuse : String
 
     }
 
@@ -99,40 +136,37 @@ classDiagram
     }
 
     class NoteReplacement{
-        +int id
-        +String note
+        id : INT
+        note : String
     }
     
     class TimeSignature{
-        +int numerateur
-        +int denominateur
+        numerateur : INT
+        denominateur : INT
     }
 
     class Setup {
-      +int id
-      +String instrument
+       instrument : String
     }
 
     class Key {
-        +String name
-        +String note
+         name : String
+         note : String
     }
 
     class Note {
+        pitch : String
+        position : Float
+        volume : INT
 
     }
 
     class NormalNote {
-        +String pitch
-        +Float position
-        +int volume
+         
     }
 
     class NoteWithError {
-        +String pitch
-        +Float position
-        +int volume
-        +boolean with_error
+        with_error : Boolean 
     }
 
     class Duration{
@@ -140,7 +174,7 @@ classDiagram
     }
 
     class FloatDuration{
-        +Float duration
+        duration : Float 
     }
 
 

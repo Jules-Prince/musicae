@@ -1,0 +1,34 @@
+music time_signature_change {
+    tempo 120
+    time_signature {
+        4, 4
+    }
+    track {
+        instrument "PIANO"
+        trackPart part1{
+            start 0
+            repeat 1
+            "E4", 0.0, quarter, 90
+            "D4", 1.0, quarter, 90
+            "C4", 2.0, quarter, 90
+            "D4", 3.0 , quarter , 90
+        }
+
+    
+    }
+    
+    time_signature {
+        3, 4
+    }
+    track {
+        instrument "DRUM"
+        trackPart part2{
+            start 1
+            repeat 1
+            "ch", 0.0, quarter, 90
+            "bd", 1.0, 1.0, 90
+        }
+    }
+
+    
+}

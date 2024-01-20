@@ -1,0 +1,18 @@
+from midiutil import MIDIFile
+midi = MIDIFile(2)
+midi.addTempo(0, 0, 120)
+time_signature = ( 4 ,  4 )
+midi.addTimeSignature(0, 0, *time_signature, 24)
+midi.addProgramChange(0, 0, 0, 0)
+midi.addNote(0, 0, 64,0 ,1, 90)
+midi.addNote(0, 0, 62,1 ,1, 90)
+midi.addNote(0, 0, 60,2 ,1, 90)
+midi.addNote(0, 0, 62,3 ,1, 90)
+midi.addTempo(1, 0, 120)
+time_signature = ( 3 ,  4 )
+midi.addTimeSignature(1, 0, *time_signature, 24)
+midi.addProgramChange(1, 0, 0, 9)
+midi.addNote(1, 9, 42,4 ,1, 90)
+midi.addNote(1, 9, 36,5 , 1.0, 90)
+with open("./output/time_signature_change.mid", "wb") as output_file:
+   midi.writeFile(output_file)
